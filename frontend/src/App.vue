@@ -1,19 +1,8 @@
 <template>
   <div class="container">
-    <a-card title="Docs as Code - Sphinx Generator">
-      <a-input v-model:value="repoUrl" placeholder="Enter public GitHub repository URL" />
-      <a-button type="primary" @click="fetchSourceCode" :loading="loading" style="margin-top: 10px">
-        Generate Documentation
-      </a-button>
-
-      <a-progress v-if="loading" :percent="progress" status="active" style="margin-top: 15px" />
-
-      <a-alert v-if="message" :message="message" type="success" showIcon style="margin-top: 15px" />
-
-      <a-button v-if="previewUrl" type="link" :href="previewUrl" target="_blank" style="margin-top: 10px">
-        📖 Preview Documentation
-      </a-button>
-    </a-card>
+    <a-input v-model:value="repoUrl" placeholder="Enter GitHub Repository URL" />
+    <a-button type="primary" @click="submitRepo" :loading="loading">Submit</a-button>
+    <a-alert v-if="downloadLink" :message="'Download: ' + downloadLink" type="success" />
   </div>
 </template>
 
@@ -23,45 +12,25 @@ import axios from 'axios';
 
 const repoUrl = ref('');
 const loading = ref(false);
-const progress = ref(0);
-const message = ref('');
-const previewUrl = ref('');
+const downloadLink = ref('');
 
-const fetchSourceCode = async () => {
-  if (!repoUrl.value) {
-    message.value = "Please enter a valid GitHub repository URL";
-    return;
-  }
-
-  loading.value = true;
-  progress.value = 20;
-
+const submitRepo = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/generate-docs', { repoUrl: repoUrl.value });
-
-    progress.value = 70;
-
-    if (response.data.success) {
-      message.value = "Documentation successfully generated!";
-      previewUrl.value = response.data.previewUrl;
-      progress.value = 100;
-    } else {
-      message.value = "Failed to generate documentation. Try again.";
-      progress.value = 0;
-    }
+    const response = await axios.post("http://localhost:5000/generate-docs",
+      { repoUrl: "https://github.com/example/repo" }, 
+      { withCredentials: true }  // ✅ Include credentials if needed
+    );
+    console.log("API Response:", response.data);
   } catch (error) {
-    message.value = "Error processing the request.";
-    console.error(error);
-  } finally {
-    loading.value = false;
+    console.error("API Error:", error);
   }
 };
 </script>
 
-<style>
+<style scoped>
 .container {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
+  max-width: 400px;
+  margin: 100px auto;
+  text-align: center;
 }
 </style>
