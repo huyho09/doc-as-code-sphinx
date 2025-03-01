@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AI Assistant Documentation &#8212; DocGen 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to DocGen’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>Here’s a Sphinx-compatible reStructuredText (RST) representation for the given source code chunk and README content:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>rst
+.. _ai-assistant:</p>
+<section id="ai-assistant-documentation">
+<h1>AI Assistant Documentation<a class="headerlink" href="#ai-assistant-documentation" title="Link to this heading">¶</a></h1>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">¶</a></h2>
+<p>The project is organized into the following structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ai-chat-app/
+│── backend/
+│   │── app.py
+│   │── requirements.txt
+│   │── .env
+│   │── venv/ (virtual environment, not committed to Git)
+│   ├── static/
+│   │   ├── js/
+│   │   │   ├── chat.js
+│   │   ├── css/
+│   │   │   ├── styles.css
+│   ├── templates/
+│   │   ├── index.html
+│   ├── README.md
+│── frontend/
+│   │── index.html
+│   │── assets/
+│   │   ├── css/
+│   │   │   ├── styles.css
+│   │   ├── js/
+│   │   │   ├── app.js
+│── README.md
+</pre></div>
+</div>
+</section>
+<section id="project-documentation">
+<h2>Project Documentation<a class="headerlink" href="#project-documentation" title="Link to this heading">¶</a></h2>
+<section id="ai-chat-web-app">
+<h3>AI Chat Web App<a class="headerlink" href="#ai-chat-web-app" title="Link to this heading">¶</a></h3>
+<p>This is a simple AI-powered web chat application using HTML, CSS, JavaScript, Bootstrap, Python Flask, and OpenAI’s GPT-4o. The frontend provides an interactive chat experience, while the backend handles AI responses via OpenAI’s API.</p>
+</section>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>A sidebar navigation for different AI assistants:
+- <strong>Essay Writer</strong>
+- <strong>Story Teller</strong>
+- <strong>Math Solver</strong>
+- <strong>Email Writer</strong>
+- <strong>Translator</strong>
+- <strong>Code Generator</strong></p></li>
+<li><p>Chat Interface:
+- User messages appear on the right.
+- AI responses appear on the left.
+- Suggested prompts for each assistant.</p></li>
+</ul>
+</section>
+<section id="installation-guide">
+<h3>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading">¶</a></h3>
+<section id="backend-setup">
+<h4>Backend Setup<a class="headerlink" href="#backend-setup" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Install Python (≥3.8) if not installed.</p></li>
+<li><p>Clone the repository:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-repo/ai-chat-app.git
+<span class="nb">cd</span><span class="w"> </span>ai-chat-app/backend
+</pre></div>
+</div>
+</li>
+<li><p>Create and activate a virtual environment:</p>
+<p>On Windows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+</pre></div>
+</div>
+<p>On Mac/Linux:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+</pre></div>
+</div>
+</li>
+<li><p>Install dependencies:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Set up .env file with OpenAI API key:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>OPENAI_API_KEY=your-api-key
+</pre></div>
+</div>
+</li>
+<li><p>Run the Flask server:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>app.py
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="frontend-setup">
+<h4>Frontend Setup<a class="headerlink" href="#frontend-setup" title="Link to this heading">¶</a></h4>
+<p>No installation required. Just open index.html in a browser.</p>
+</section>
+</section>
+<section id="how-it-works">
+<h3>How It Works<a class="headerlink" href="#how-it-works" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>User selects an AI assistant from the sidebar.</p></li>
+<li><p>Suggested prompts appear.</p></li>
+<li><p>User enters a prompt.</p></li>
+<li><p>The request is sent to the Flask backend.</p></li>
+<li><p>The AI (GPT-4o) responds, and the response is displayed in the chat.</p></li>
+</ol>
+</section>
+<section id="file-structure">
+<h3>File Structure<a class="headerlink" href="#file-structure" title="Link to this heading">¶</a></h3>
+<p><code class="code docutils literal notranslate"><span class="pre">backend/</span></code> contains the Flask backend.
+<code class="code docutils literal notranslate"><span class="pre">frontend/</span></code> holds the HTML, CSS, and JS files for the UI.
+<code class="code docutils literal notranslate"><span class="pre">README.md</span></code> contains setup and usage instructions.</p>
+</section>
+<section id="api-endpoint">
+<h3>API Endpoint<a class="headerlink" href="#api-endpoint" title="Link to this heading">¶</a></h3>
+<p>POST <cite>/api/chat</cite></p>
+<ul class="simple">
+<li><p>Request:</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;assistant_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Essay&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Write an essay on climate change&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Response:</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;response&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Climate change is a pressing issue...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="future-improvements">
+<h3>Future Improvements<a class="headerlink" href="#future-improvements" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>User authentication.</p></li>
+<li><p>Save chat history.</p></li>
+<li><p>Dark mode toggle.</p></li>
+</ul>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<p>This RST document should be readable by Sphinx to generate documentation based on the provided structure and instructions from your source code chunk and README.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DocGen</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AI Assistant Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-documentation">Project Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to DocGen’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Huy Ho.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/docs_1740869567682.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

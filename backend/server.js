@@ -2,12 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const fs = require('fs').promises;
-const { createWriteStream } = require('fs');
 const { OpenAI } = require('openai');
 const path = require('path');
 const cors = require('cors');
 const { exec } = require('child_process');
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+const { Tiktoken } = require('@dqbd/tiktoken');
 
 const app = express();
 const port = 3000;
@@ -18,130 +17,63 @@ app.use('/downloads', express.static(path.join(__dirname, 'generated_docs')));
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Function to estimate tokens (1 token ≈ 4 chars)
+// Initialize Tiktoken
+let tiktoken;
+try {
+  tiktoken = new Tiktoken({ encoding: 'cl100k_base' });
+} catch (error) {
+  console.error('Failed to initialize Tiktoken:', error.message);
+}
+
+// Function to count tokens with fallback
 function countTokens(text) {
+  try {
+    if (tiktoken) {
+      return tiktoken.encode(text).length;
+    }
+  } catch (error) {
+    console.error('Tiktoken error:', error.message);
+  }
+  // Fallback: Rough estimate (1 token ≈ 4 chars)
   return Math.ceil(text.length / 4);
 }
 
-// Worker thread logic for fetching file contents
-if (!isMainThread) {
-  const { owner, repo, path, token, extensions } = workerData;
+// Function to recursively fetch all file contents and chunk during fetch
+async function fetchAllRepoContents(owner, repo, path = '', token, extensions = ['.js', '.py', '.ts', '.md']) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  const response = await axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } });
   
-  async function fetchDirContents() {
-    let contents = [];
-    const perPage = 100;
-    let page = 1;
+  const chunks = [];
+  let currentChunk = '';
 
-    while (true) {
-      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?per_page=${perPage}&page=${page}`;
-      const response = await axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } });
-      const items = response.data;
-
-      if (!items || items.length === 0) break;
-
-      for (const item of items) {
-        if (item.type === 'file' && item.download_url && extensions.some(ext => item.path.endsWith(ext))) {
-          const fileContent = await axios.get(item.download_url).then(res => res.data);
-          if (fileContent.length > 500000) {
-            console.warn(`Worker ${workerData.path}: Skipping large file: ${item.path} (${fileContent.length} chars)`);
-            continue;
-          }
-          contents.push(`\n=== File: ${item.path} ===\n${fileContent}`);
-        }
-      }
-
-      page++;
-    }
-
-    parentPort.postMessage(contents.join('\n')); // Send content back to main thread
-  }
-
-  fetchDirContents().catch(err => parentPort.postMessage({ error: err.message }));
-  process.exit(); // Exit worker after completion
-}
-
-// Main thread function to fetch and coordinate workers
-async function fetchAllRepoContents(owner, repo, token, outputFile, extensions = ['.js', '.py', '.ts', '.md']) {
-  const writeStream = createWriteStream(outputFile, { flags: 'w' });
-  let workerCount = 0;
-  let completedWorkers = 0;
-
-  // Fetch root directory to identify subdirectories and files
-  const rootUrl = `https://api.github.com/repos/${owner}/${repo}/contents?per_page=100&page=1`;
-  const rootResponse = await axios.get(rootUrl, { headers: { 'Authorization': `Bearer ${token}` } });
-  const rootItems = rootResponse.data;
-
-  // Write root-level files directly
-  for (const item of rootItems) {
+  for (const item of response.data) {
     if (item.type === 'file' && item.download_url && extensions.some(ext => item.path.endsWith(ext))) {
       const fileContent = await axios.get(item.download_url).then(res => res.data);
       if (fileContent.length > 500000) {
-        console.warn(`Main: Skipping large file: ${item.path} (${fileContent.length} chars)`);
+        console.warn(`Skipping large file: ${item.path} (${fileContent.length} chars)`);
         continue;
       }
-      writeStream.write(`\n=== File: ${item.path} ===\n${fileContent}`);
-    }
-  }
-
-  // Spawn workers for directories
-  const directories = rootItems.filter(item => item.type === 'dir');
-  workerCount = directories.length;
-
-  if (workerCount === 0) {
-    writeStream.end();
-    await new Promise(resolve => writeStream.on('finish', resolve));
-    return;
-  }
-
-  const workers = directories.map(dir => {
-    return new Promise((resolve, reject) => {
-      const worker = new Worker(__filename, {
-        workerData: { owner, repo, path: dir.path, token, extensions }
-      });
-
-      worker.on('message', (data) => {
-        if (typeof data === 'string') {
-          writeStream.write(data); // Write worker's content to file
-        } else if (data.error) {
-          console.error(`Worker error for ${dir.path}: ${data.error}`);
+      const fileText = `\n=== File: ${item.path} ===\n${fileContent}`;
+      if (countTokens(currentChunk + fileText) > 25000) {
+        chunks.push(currentChunk);
+        currentChunk = fileText;
+      } else {
+        currentChunk += fileText;
+      }
+    } else if (item.type === 'dir') {
+      const dirChunks = await fetchAllRepoContents(owner, repo, item.path, token, extensions);
+      for (const dirChunk of dirChunks) {
+        if (countTokens(currentChunk + dirChunk) > 25000) {
+          chunks.push(currentChunk);
+          currentChunk = dirChunk;
+        } else {
+          currentChunk += dirChunk;
         }
-      });
-
-      worker.on('exit', () => {
-        completedWorkers++;
-        if (completedWorkers === workerCount) {
-          writeStream.end();
-        }
-        resolve();
-      });
-
-      worker.on('error', reject);
-    });
-  });
-
-  await Promise.all(workers);
-  await new Promise(resolve => writeStream.on('finish', resolve));
-}
-
-// Function to chunk source code based on token count
-function chunkSourceCode(sourceCode, maxTokens = 10000) {
-  const chunks = [];
-  let currentChunk = '';
-  const lines = sourceCode.split('\n');
-
-  for (const line of lines) {
-    const lineTokens = countTokens(line);
-    const currentChunkTokens = countTokens(currentChunk);
-
-    if (currentChunkTokens + lineTokens > maxTokens) {
-      chunks.push(currentChunk);
-      currentChunk = line;
-    } else {
-      currentChunk += (currentChunk ? '\n' : '') + line;
+      }
     }
   }
   if (currentChunk) chunks.push(currentChunk);
-  return chunks;
+  return chunks; // Return array of chunks instead of joined string
 }
 
 // Function to call OpenAI with retry and exponential backoff
@@ -181,22 +113,20 @@ app.post('/generate-docs', async (req, res) => {
   const [_, repoOwner, repoName] = match;
 
   try {
-    // Step 1: Fetch all source code and write incrementally to file with workers
-    const sourceFilePath = path.join(__dirname, 'generated_docs', 'source_code.txt');
-    await fetchAllRepoContents(repoOwner, repoName, process.env.GITHUB_TOKEN, sourceFilePath);
-
-    // Step 2: Read the saved source code
-    const sourceCode = await fs.readFile(sourceFilePath, 'utf8');
-    if (!sourceCode) {
+    // Step 1: Fetch filtered source code recursively as chunks
+    const sourceCodeChunks = await fetchAllRepoContents(repoOwner, repoName, '', process.env.GITHUB_TOKEN);
+    if (!sourceCodeChunks || sourceCodeChunks.length === 0) {
       return res.status(400).json({ error: 'No relevant source code found (e.g., .js, .py, .ts, .md files)' });
     }
-    console.log(`Source code size: ${sourceCode.length} characters`);
-
-    // Step 3: Chunk the source code for GPT-4o
-    const sourceCodeChunks = chunkSourceCode(sourceCode);
     console.log(`Generated ${sourceCodeChunks.length} chunks`);
+    
+    // Save full source code for reference
+    const sourceCode = sourceCodeChunks.join('\n');
+    console.log(`Source code size: ${sourceCode.length} characters`);
+    const sourceFilePath = path.join(__dirname, 'generated_docs', 'source_code.txt');
+    await fs.writeFile(sourceFilePath, sourceCode);
 
-    // Step 4: Generate Sphinx RST for each chunk with retry logic
+    // Step 2: Generate Sphinx RST for each chunk with retry logic
     const rstParts = [];
     for (let i = 0; i < sourceCodeChunks.length; i++) {
       const chunk = sourceCodeChunks[i];
@@ -207,7 +137,7 @@ app.post('/generate-docs', async (req, res) => {
     }
     const sphinxDocs = rstParts.join('\n\n.. raw:: html\n\n   <hr>\n\n');
 
-    // Step 5: Set up Sphinx structure
+    // Step 3: Set up Sphinx structure
     const sphinxDir = path.join(__dirname, 'sphinx_docs');
     const sourceDir = path.join(sphinxDir, 'source');
     const buildDir = path.join(sphinxDir, 'build');
@@ -253,7 +183,7 @@ Welcome to DocGen's documentation!
 `;
     await fs.writeFile(indexPath, indexContent);
 
-    // Step 6: Run sphinx-build
+    // Step 4: Run sphinx-build
     const sphinxCommand = `sphinx-build -b html ${sourceDir} ${buildDir}`;
     await new Promise((resolve, reject) => {
       exec(sphinxCommand, (error, stdout, stderr) => {
@@ -266,7 +196,7 @@ Welcome to DocGen's documentation!
       });
     });
 
-    // Step 7: Provide HTML download link
+    // Step 5: Provide HTML download link
     const htmlFilePath = path.join(buildDir, 'index.html');
     const htmlFileName = `docs_${Date.now()}.html`;
     const downloadPath = path.join(__dirname, 'generated_docs', htmlFileName);
