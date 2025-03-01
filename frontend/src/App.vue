@@ -1,36 +1,40 @@
 <template>
-  <div class="container">
-    <a-input v-model:value="repoUrl" placeholder="Enter GitHub Repository URL" />
-    <a-button type="primary" @click="submitRepo" :loading="loading">Submit</a-button>
-    <a-alert v-if="downloadLink" :message="'Download: ' + downloadLink" type="success" />
+  <div id="app">
+    <h1>Generate Sphinx Documentation</h1>
+    <RepoForm @generate-docs="handleGenerateDocs" />
+    <div v-if="downloadLink">
+      <p>Documentation generated successfully!</p>
+      <a :href="downloadLink" target="_blank" download>Download RST File</a>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+<script>
+import RepoForm from './components/RepoForm.vue';
 
-const repoUrl = ref('');
-const loading = ref(false);
-const downloadLink = ref('');
-
-const submitRepo = async () => {
-  try {
-    const response = await axios.post("http://localhost:5000/generate-docs",
-      { repoUrl: "https://github.com/example/repo" }, 
-      { withCredentials: true }  // ✅ Include credentials if needed
-    );
-    console.log("API Response:", response.data);
-  } catch (error) {
-    console.error("API Error:", error);
-  }
+export default {
+  name: 'App',
+  components: { RepoForm },
+  data() {
+    return {
+      downloadLink: null,
+    };
+  },
+  methods: {
+    handleGenerateDocs(link) {
+      this.downloadLink = link;
+    },
+  },
 };
 </script>
 
-<style scoped>
-.container {
-  max-width: 400px;
-  margin: 100px auto;
+<style>
+#app {
+  font-family: Arial, sans-serif;
   text-align: center;
+  margin-top: 50px;
+}
+h1 {
+  color: #2c3e50;
 }
 </style>
