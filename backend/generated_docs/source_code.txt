@@ -1,545 +1,332 @@
 
 === File: README.md ===
-<p align="center">
-    <img src="https://i.imgur.com/mpXJ5nf.png" alt="Logo" width="300">
-</p>
 
-## Table of Contents
-- [Description](#description)
-- [Preview](#preview)
-- [Features](#features)
-- [Watch the Installation Video](#watch-the-installation-video-outdated)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [Disclaimer](#disclaimer)
-- [Acknowledgements](#acknowledgements)
-- [Issues](#issues)
+# openai-json
 
-# TIKTOD V3
+This is a project to test OpenAI API and NodeJS openAI framework
 
-## Description
-TIKTOD V3 is a bot application designed to automate interactions on Zefoy website, such as increasing views, hearts, followers, and shares on a specified video. The bot uses technologies like Selenium for web automation and OCR (Optical Character Recognition) for solving captchas.
+### Resolve Version Conflict
 
-## Preview
-Here is a screenshot of the TIKTOD V3 application:
+```
+$env:OPENAI_API_KEY="secret key"
+python==3.11
+```
 
-<p align="left">
-    <img src="https://i.imgur.com/X9PH9Hp.png" alt="TIKTOD V3 Screenshot" width="600">
-</p>
+### How to run JS Source
 
-## Features
-- User-friendly interface using `customtkinter`.
-- Added feature to auto-detect available modes on the website.
-- Automatic captcha solving using OCR with `pytesseract`.
-- Light mode and dark mode support.
-- Detailed stats.
+1. Open the project folder in VSC
+2. Use cli: 
+```cd back-end```
+3. Use cli: 
+```npm i```
+4. Use cli: 
+```node server.js```
+5. Start Live Server using **index.html** in front-end folder
+6. Install [Allow CORS: Access-Control-Allow-Origin](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf)
 
-## Watch the Installation Video (outdated)
-If you are unsure how to install the application, please watch this [installation video](https://youtu.be/50gvfn1zg-w) for a step-by-step guide, or for a demo of the bot.
+### How to run Python source with Anaconda (deprecated)
+~~1. Create venv using conda: 
+```conda env create -f environment.yml```
+2. Using Cli: 
+```python main.py```
+3. Install [Allow CORS: Access-Control-Allow-Origin](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf)
+4. Start Live Server using **index.html** inside `openai-py` folder~~
 
-## Prerequisites
-- Google Chrome (version 89 or later) must be installed on your system. You can download it from [here](https://www.google.com/chrome/).
-- Ensure Tesseract OCR is installed on your system. You can download it from [here](https://github.com/tesseract-ocr/tesseract/releases/latest). 
-Additionally, make sure to add Tesseract to your system PATH. Follow this [tutorial](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/) for instructions on how to add it to the PATH on Windows 10.
-- Python 3.7 or higher must be installed on your system. You can download it from [here](https://www.python.org/downloads/).
+### [UPDATE] How to run Python with .venv
+1. Deactivate your running conda env: 
+```conda deactivate <your_env_name>```
+2. Remove conda env: 
+```**conda env remove --name <your_env_name>```
+3. Use cli: 
+```cd openai-py```
+4. Use cli to create virtual environment:
+```
+python -m venv <your_env_name>
+# prefer using .venv because the venv is already in gitignore to avoid pushing the whole venv
+python -m venv .venv
+```
+5. Activate venv by using cli:
+```
+.\.venv\Scripts\activate (Windows)
+source .venv/bin/activate (MacOS)
+```
+6. Install all libs in requirements.txt
+```
+# On Windows
+pip install -r requirements.txt
+# On MacOS
+python -m pip install -r requirements.txt
+```
+7. Deactivate .venv using `deactivate`
 
-> **Note:** If you plan to use the executable version, you do not need to install Python. Ensure that Python (if you plan to use the source code) and Tesseract OCR are added to your system's PATH.
+### Idea
+
+The concept of this project is to build a dynamic chatbot using the OpenAI API. The user will input a question, and the chatbot will generate and respond with an answer based on pre-existing data stored in a `data.json` file. If the chatbot provides the correct answer (i.e., an answer found in the `data.json` file), the user can simply submit the response. However, if the chatbot’s response is incorrect or insufficient, the user has the ability to modify the answer in a provided text area.
+
+In cases where the chatbot cannot find a suitable answer (i.e., the question is not present in the `data.json` file), it will return a generic response from OpenAI, indicating that the question is new. The user can then input their own answer, which will be appended to the `data.json` file, updating the dataset with new question-answer pairs for future reference. This ensures continuous learning and improvement of the chatbot over time.
+
+The process flow involves the following steps:
+
+1.  **User Inputs Question**: The user asks a question through the interface.
+2.  **Chatbot Provides Answer**: The chatbot attempts to provide an answer based on the existing `data.json` file.
+3.  **User Verifies or Edits Answer**: If the answer is correct, the user submits it as-is. If not, the user can modify the answer.
+4.  **New Question Handling**: If the question is new (i.e., not in the existing dataset), the chatbot will respond with a general prompt from OpenAI. The user can then provide their own answer.
+5.  **Data Update**: Any new answers, whether modified or provided by the user for a new question, will be appended to the `data.json` file.
+
+This approach allows the chatbot to grow and adapt based on user input, enriching the dataset and improving the chatbot’s responses over time. The backend system will ensure that all updates to the `data.json` file are properly stored and can be referenced in future interactions, creating a personalized and continuously improving chatbot experience.
+
+### Updates:
+- Rework using Python OpenAI
+- Using `gpt-3.5-turbo` instead of `davinci` to get more data responses
+
+### To Do
+- Restructure **json.data** to get the lastest update or random select the answer for one question.
+- Implement Edit button to edit the response instead of using the popup.
+- Implement [t5-base-e2e-qg](https://huggingface.co/valhalla/t5-base-e2e-qg).
+- ~~Rework back-end using Python openAI framework~~
+
+### Issues and Bugs:
+- Website reload when chatbot responses
+
+=== File: back-end-js/server.js ===
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const axios = require('axios');
+
+const app = express();
+app.use(cors()); // Alow CORS for all resource
+app.use(bodyParser.json());
+
+const apiKey = process.env.OPENAI_API_KEY;  
+
+let data = require('./data.json'); // read json
 
 
-## Installation
+app.post('/chat', async (req, res) => {
+    const userQuestion = req.body.question;
+    
+    const found = data.questions.find(q => q.question.toLowerCase() === userQuestion.toLowerCase());
 
-1. Download the latest release zip or executable from the [releases page](https://github.com/kangoka/tiktodv3/releases).
-2. If you downloaded the zip file, extract it to a directory of your choice.
-3. Navigate to the extracted directory or the directory containing the executable.
+    if (found) {
+        res.json({ answer: found.answer });
+    } else {
+        // Generate answer using OpenAI
+        try {
+            const response = await axios.post(
+                'https://api.openai.com/v1/engines/text-davinci-003/completions',
+                {
+                    prompt: userQuestion,
+                    max_tokens: 100,
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
-## Usage
-
-### Option 1: Using Source Code
-
-1. Install the required packages:
-    ```sh
-    pip install -r requirements.txt
-    ```
-2. Run the application:
-    ```sh
-    python app.py
-    ```
-
-### Option 2: Using Executable
-
-1. Run the executable file directly.
-
-2. Enter the TikTok video URL in the provided input field.
-3. Click the "Setup" button to initialize the bot.
-4. Select the desired mode (Views, Hearts, Followers, Shares) from the sidebar.
-5. Click the "Start" button to begin the automation process.
-6. To stop the application or change the mode, click the "Stop" button.
-
-
-## Contributing
-Contributions are welcome! Please fork the repository and submit a pull request with your changes.
-
-## Disclaimer
-
-This project is intended for educational purposes only. The use of this bot to manipulate TikTok metrics may violate TikTok's terms of service and could result in legal consequences. Use it responsibly, ethically, and at your own risk.
-
-## Acknowledgements
-
-Thanks to Zefoy for providing free services and previous contributors for their valuable input and support.
-
-## Issues
-
-If you encounter any issues while using TIKTOD V3, please open an issue on the [GitHub repository](https://github.com/kangoka/tiktodv3/issues) with detailed information about the issue, including:
-   - Steps to reproduce the issue.
-   - Any error messages or logs.
-   - Your operating system and Python version.
-=== File: app.py ===
-import tkinter as tk
-import customtkinter as ctk
-import threading
-import time
-from PIL import Image  # Import the Image class
-from bot import Bot
-from utils import log_message, resource_path
-
-class App(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-
-        self.title("TIKTOD V3")
-        self.geometry("800x600")
-        self.iconbitmap(resource_path("assets/logo.ico"))
-
-        # Configure grid layout
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, weight=1)
-
-        # Create sidebar frame with widgets
-        self.sidebar_frame = ctk.CTkFrame(self, width=200, corner_radius=0, fg_color="gray20")
-        self.sidebar_frame.grid(row=0, column=0, rowspan=5, sticky="nsew")
-        self.sidebar_frame.grid_rowconfigure(9, weight=1)
-
-        custom_font = ctk.CTkFont(family="Helvetica", size=14, weight="bold")
-
-        self.logo_image_dark = ctk.CTkImage(light_image=Image.open(resource_path("assets/dark-logo.png")), size=(100, 100))
-        self.logo_image_light = ctk.CTkImage(light_image=Image.open(resource_path("assets/light-logo.png")), size=(100, 100))
-        self.logo_image_label = ctk.CTkLabel(self.sidebar_frame, image=self.logo_image_dark, text="")
-        self.logo_image_label.grid(row=0, column=0, padx=20, pady=(20, 20))
-
-        self.link_label = ctk.CTkLabel(self.sidebar_frame, text="TikTok video URL:", font=custom_font, anchor="w")  # Added anchor="w"
-        self.link_label.grid(row=1, column=0, padx=20, pady=1, sticky="w")  # Added sticky="w"
-        self.link_entry = ctk.CTkEntry(self.sidebar_frame, width=180, font=custom_font)
-        self.link_entry.grid(row=2, column=0, padx=20, pady=1)
-
-        self.amount_label = ctk.CTkLabel(self.sidebar_frame, text="Amount:", font=custom_font, anchor="w")  # New label
-        self.amount_label.grid(row=3, column=0, padx=20, pady=1, sticky="w")  # New label grid
-        self.amount_entry = ctk.CTkEntry(self.sidebar_frame, width=180, font=custom_font)  # New entry
-        self.amount_entry.grid(row=4, column=0, padx=20, pady=1)  # New entry grid
-
-        self.start_button = ctk.CTkButton(self.sidebar_frame, text="Setup", command=lambda: threading.Thread(target=self.setup_bot).start(), font=custom_font)
-        self.start_button.grid(row=6, column=0, padx=20, pady=20)  # Adjusted row to move the button lower
-
-        # Create main frame with tab view for log and stats
-        self.main_frame = ctk.CTkFrame(self, corner_radius=0)
-        self.main_frame.grid(row=0, column=1, sticky="nsew")
-        self.main_frame.grid_rowconfigure(1, weight=1)
-        self.main_frame.grid_columnconfigure(0, weight=1)
-
-        self.tab_view = ctk.CTkTabview(self.main_frame)
-        self.tab_view.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
-
-        self.log_tab = self.tab_view.add("Log")
-        self.log_text = ctk.CTkTextbox(self.log_tab, height=300, width=600, font=custom_font)
-        self.log_text.pack(padx=20, pady=10, fill="both", expand=True)
-
-        self.stats_tab = self.tab_view.add("Stats")
-        self.stats_tab.grid_rowconfigure(0, weight=1)
-        self.stats_tab.grid_columnconfigure(0, weight=1)
-
-        self.stats_frame = ctk.CTkFrame(self.stats_tab)
-        self.stats_frame.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
-
-        self.stats_labels = {
-            "views": ctk.CTkLabel(self.stats_frame, text="Views Sent: 0", font=custom_font),
-            "hearts": ctk.CTkLabel(self.stats_frame, text="Hearts Sent: 0", font=custom_font),
-            "followers": ctk.CTkLabel(self.stats_frame, text="Followers Sent: 0", font=custom_font),
-            "shares": ctk.CTkLabel(self.stats_frame, text="Shares Sent: 0", font=custom_font),
-            "favorites": ctk.CTkLabel(self.stats_frame, text="Favorites Sent: 0", font=custom_font),
-            "elapsed_time": ctk.CTkLabel(self.stats_frame, text="Elapsed Time: 00:00:00", font=custom_font)
+            res.json({ answer: response.data.choices[0].text.trim() });
+        } catch (error) {
+            console.error('Error generating answer:', error);
+            res.status(500).json({ error: 'Error generating answer' });
         }
+    }
+});
 
-        for i, label in enumerate(self.stats_labels.values()):
-            label.grid(row=i, column=0, padx=20, pady=5, sticky="w")
+app.post('/verify', (req, res) => {
+    const { question, answer, correct } = req.body;
 
-        self.running = False  # Add a flag to control the loop
-        self.mode_var = tk.StringVar(value="Views")  # Initialize mode_var
-        self.bot = Bot(self, log_message)
-        self.elapsed_time = 0  # Initialize elapsed_time
-        self.views = 0  # Initialize views
-        self.hearts = 0  # Initialize hearts
-        self.followers = 0  # Initialize followers
-        self.shares = 0  # Initialize shares
-        self.favorites = 0  # Initialize favorites
+    if (!correct) {
+        data.questions.push({ question, answer });
+        fs.writeFileSync('./data.json', JSON.stringify(data, null, 2));
+    }
 
-        self.theme_switch_var = tk.StringVar(value="dark")
-        self.theme_switch = ctk.CTkSwitch(self.sidebar_frame, text="Dark Mode", variable=self.theme_switch_var, onvalue="dark", offvalue="light", command=self.switch_theme, font=custom_font)
-        self.theme_switch.grid(row=10, column=0, padx=20, pady=10, sticky="s")
+    res.sendStatus(200);
+});
 
-        self.version_label = ctk.CTkLabel(self, text="Version 1.2.0", fg_color="transparent")
-        self.version_label.grid(row=5, column=1, padx=20, pady=(10, 0), sticky="se")
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
 
-        self.github_link = ctk.CTkLabel(self, text="https://github.com/kangoka/tiktodv3", fg_color="transparent", cursor="hand2")
-        self.github_link.grid(row=6, column=1, padx=20, pady=(0, 10), sticky="se")
-        self.github_link.bind("<Button-1>", lambda e: self.open_github())
+=== File: openai-py/front-end/script.js ===
+class Chatbot {
+    constructor(chatBox, userInput, sendBtn, saveBtn) {
+        this.chatBox = document.querySelector(chatBox);
+        this.userInput = document.getElementById(userInput);
+        this.sendBtn = document.getElementById(sendBtn);
+        this.saveBtn = document.getElementById(saveBtn);
+        this.currentMessage = '';
 
-    def open_github(self):
-        import webbrowser
-        webbrowser.open("https://github.com/kangoka/tiktodv3")
+        this.initialize();
+    }
 
-    def switch_theme(self):
-        if self.theme_switch_var.get() == "dark":
-            ctk.set_appearance_mode("dark")
-            self.sidebar_frame.configure(fg_color="gray20")
-            self.logo_image_label.configure(image=self.logo_image_dark)
-        else:
-            ctk.set_appearance_mode("light")
-            self.sidebar_frame.configure(fg_color="white")
-            self.logo_image_label.configure(image=self.logo_image_light)
+    // Initialize event listeners
+    initialize() {
+        this.sendBtn.addEventListener('click', () => this.sendMessage());
+        this.saveBtn.addEventListener('click', () => this.saveEditedResponse());
+    }
 
-    def setup_bot(self):
-        self.bot.setup_bot()
+    // Append a message to the chat box
+    appendMessage(sender, message) {
+        this.chatBox.innerHTML += `<div><strong>${sender}:</strong> ${message}</div>`;
+        this.chatBox.scrollTop = this.chatBox.scrollHeight;
+    }
 
-    def start_bot(self):
-        auto = self.mode_var.get()
-        vidUrl = self.link_entry.get()
-        
-        try:
-            amount = int(self.amount_entry.get())  # Get the amount entered and ensure it is a number
-        except ValueError:
-            log_message(self, "Amount must be a number")
-            return
+    // Send message to the backend
+    sendMessage() {
+        const message = this.userInput.value.trim();
+        if (!message) return;
 
-        if auto in ["Views", "Hearts", "Followers", "Shares", "Favorites"]:
-            if not self.running:
-                self.start_time = time.time() - self.elapsed_time  # Continue from the last elapsed time
-                self.log_text.delete(1.0, tk.END)  # Clear the log area
-                log_message(self, "TIKTOD V3")
-                log_message(self, "Log:")
+        // Append user message
+        this.appendMessage('You', message);
+        this.userInput.value = '';
 
-            self.running = True  # Set the flag to True
-            self.bot.running = True  # Ensure the bot's running flag is also set to True
+        fetch('http://127.0.0.1:5000/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message }),
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const botResponse = data.response;
 
-            self.link_entry.configure(state="disabled")  # Disable the URL entry
-            self.amount_entry.configure(state="disabled")  # Disable the amount entry
-            self.mode_menu.configure(state="disabled")  # Disable the option menu
+            // Append bot response with edit button
+            this.appendMessage('Bot', `${botResponse} <button class="btn btn-sm btn-link edit-btn">Edit</button>`);
 
-            threading.Thread(target=self.update_stats_label).start()  # Start the stats update thread
+            // Add event listener for edit buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.currentMessage = message;
+                    document.getElementById('edit-response').value = botResponse;
+                    new bootstrap.Modal(document.getElementById('editModal')).show();
+                });
+            });
 
-            threading.Thread(target=self.bot.loop, args=(vidUrl, auto, amount)).start()  # Pass the amount to the bot loop
-            
-            self.start_button.configure(text="Stop", command=self.stop_bot)
-        else:
-            log_message(self, f"{auto} is not a valid option. Please pick Views, Hearts, Followers, Shares, or Favorites")
+            this.chatBox.scrollTop = this.chatBox.scrollHeight;
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
-    def stop_bot(self):
-        log_message(self, "Bot stopped")
+    // Save edited response to data.json
+    saveEditedResponse() {
+        const updatedResponse = document.getElementById('edit-response').value.trim();
+        if (!updatedResponse) return;
 
-        self.link_entry.configure(state="normal")  # Enable the URL entry
-        self.amount_entry.configure(state="normal")  # Enable the amount entry
-        self.mode_menu.configure(state="normal")  # Enable the option menu
+        fetch('http://127.0.0.1:5000/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: this.currentMessage, response: updatedResponse }),
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
 
-        self.running = False  # Set the flag to False
-        self.bot.running = False  # Ensure the bot's running flag is also set to False
-        self.elapsed_time = time.time() - self.start_time  # Save the elapsed time
+            // Update the chat box with the new response
+            this.appendMessage('Updated Bot', updatedResponse);
 
-        self.start_button.configure(text="Start", command=self.start_bot)
+            this.chatBox.scrollTop = this.chatBox.scrollHeight;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
 
-    def update_stats_label(self):
-        while self.running:
-            time_elapsed = time.strftime('%H:%M:%S', time.gmtime(time.time() - self.start_time))
-            self.stats_labels["elapsed_time"].configure(text=f"Elapsed Time: {time_elapsed}")
-            self.stats_labels["views"].configure(text=f"Views Sent: {self.views}")
-            self.stats_labels["hearts"].configure(text=f"Hearts Sent: {self.hearts}")
-            self.stats_labels["followers"].configure(text=f"Followers Sent: {self.followers}")
-            self.stats_labels["shares"].configure(text=f"Shares Sent: {self.shares}")
-            self.stats_labels["favorites"].configure(text=f"Favorites Sent: {self.favorites}")
-            time.sleep(1)
+// Init the Chatbot class
+document.addEventListener('DOMContentLoaded', () => {
+    new Chatbot('.chat-box', 'user-input', 'send-btn', 'save-btn');
+});
+
+=== File: openai-py/main.py ===
+import os
+
+# Set proxy environment variables
+#os.environ['http_proxy'] = 'http://127.0.0.1:3128'
+#os.environ['https_proxy'] = 'http://127.0.0.1:3128'
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import json
+import openai
+from dotenv import load_dotenv
+
+load_dotenv() # Load environment variables from .env file load_dotenv()
+
+app = Flask(__name__)
+
+# Allow all CORS
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Initial data.json
+try:
+    with open("data.json", "r") as f:
+        data = json.load(f)
+except FileNotFoundError:
+    data = {"data": []}
+
+# Helper function to save data to data.json
+def save_data():
+    with open("data.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+# Endpoint to handle chatbot responses
+@app.route("/chat", methods=["POST"])
+def chat():
+    if not request.is_json:
+        return jsonify({"error": "Unsupported Media Type"}), 415
+
+    user_input = request.json.get("message")
+    if not user_input:
+        return jsonify({"error": "Message not provided"}), 400
+
+    for entry in data["data"]:
+        if entry["question"] == user_input:
+            return jsonify({"response": entry["answer"]})
+    
+    # Call OpenAI API if response is not found
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": user_input}]
+    )
+    answer = response.choices[0].message.content
+    
+    # Save the response in data.json
+    data["data"].append({"question": user_input, "answer": answer})
+    save_data()
+    
+    return jsonify({"response": answer})
+
+# Endpoint to update bot responses
+@app.route("/update", methods=["POST"])
+def update():
+    if not request.is_json:
+        return jsonify({"error": "Unsupported Media Type"}), 415
+
+    user_input = request.json.get("message")
+    updated_response = request.json.get("response")
+    if not user_input or not updated_response:
+        return jsonify({"error": "Message or response not provided"}), 400
+
+    for entry in data["data"]:
+        if entry["question"] == user_input:
+            entry["answer"] = updated_response
+            save_data()
+            return jsonify({"message": "Response updated successfully"})
+    
+    data["data"].append({"question": user_input, "answer": updated_response})
+    save_data()
+    
+    return jsonify({"message": "Response updated successfully"})
 
 if __name__ == "__main__":
-    app = App()
-    app.mainloop()
-
-=== File: bot.py ===
-import chromedriver_autoinstaller
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from PIL import Image
-import pytesseract
-import time
-import random
-import customtkinter as ctk
-import tkinter as tk
-import re
-from utils import log_message, resource_path
-
-class Bot:
-    def __init__(self, app, log_callback):
-        self.app = app
-        self.log_callback = log_callback
-        self.driver = None
-        self.running = False
-
-    def setup_bot(self):
-        log_message(self.app, "Setting up the bot...")
-        # Automatically install the correct version of ChromeDriver
-        chromedriver_autoinstaller.install()
-        
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Enable headless mode
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-webgl")
-        chrome_options.add_argument("--disable-software-rasterizer")
-        chrome_options.add_argument("--log-level=3")  # Suppress most logs
-        chrome_options.add_argument("--disable-logging")  # Disable logging
-        
-        self.driver = webdriver.Chrome(options=chrome_options)
-
-        # Block requests to fundingchoicesmessages.google.com
-        self.driver.execute_cdp_cmd(
-            "Network.setBlockedURLs",
-            {"urls": ["https://fundingchoicesmessages.google.com/*"]}
-        )
-        self.driver.execute_cdp_cmd("Network.enable", {})  # Enable network interception
-
-        self.get_captcha()
-
-        # Create a frame for the mode selection
-        self.app.mode_frame = ctk.CTkFrame(self.app.sidebar_frame, corner_radius=0)
-        self.app.mode_frame.grid(row=5, column=0, padx=20, pady=10, sticky="nsew")
-
-        self.app.mode_label = ctk.CTkLabel(self.app.mode_frame, text="Select Mode:")
-        self.app.mode_label.grid(row=0, column=0, padx=20, pady=10)
-        self.app.mode_var = tk.StringVar(value="----------")
-
-        available_modes = []
-        buttons = {
-            "Followers": '//button[@class="btn btn-primary rounded-0 t-followers-button"]',
-            "Hearts": '//button[@class="btn btn-primary rounded-0 t-hearts-button"]',
-            "Views": '//button[@class="btn btn-primary rounded-0 t-views-button"]',
-            "Shares": '//button[@class="btn btn-primary rounded-0 t-shares-button"]',
-            "Favorites": '//button[@class="btn btn-primary rounded-0 t-favorites-button"]',
-            "Live Stream": '//button[@class="btn btn-primary rounded-0 t-livestream-button"]'
-        }
-
-        for text, xpath in buttons.items():
-            try:
-                button = self.driver.find_element(By.XPATH, xpath)
-                if not button.get_attribute("disabled"):
-                    available_modes.append(text)
-            except Exception as e:
-                log_message(self.app, f"Error finding button {text}: {e}")
-
-        self.app.mode_menu = ctk.CTkOptionMenu(self.app.mode_frame, variable=self.app.mode_var, values=available_modes)
-        self.app.mode_menu.grid(row=1, column=0, padx=20, pady=10)
-
-        self.app.start_button.configure(text="Start", command=self.app.start_bot)
-
-    def get_captcha(self):
-        url = "http://zefoy.com"  # Replace with the actual URL of the main page
-
-        try:
-            self.driver.get(url)
-            # Wait for the page to load
-            WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
-
-            for attempt in range(3):
-                try:
-                    # Wait for the captcha image to be present
-                    captcha_img_tag = WebDriverWait(self.driver, 10).until(
-                        EC.presence_of_element_located((By.XPATH, '//img[@class="img-thumbnail card-img-top border-0"]'))
-                    )  # Using an XPath selector
-
-                    if captcha_img_tag:
-                        log_message(self.app, "Captcha image found")
-                        # Take a screenshot of the captcha image element
-                        captcha_img_tag.screenshot('captcha.png')
-                        log_message(self.app, "Captcha saved as captcha.png")
-                        image = Image.open('captcha.png')
-                        captcha_text = self.read_captcha(image)
-                        log_message(self.app, f"Captcha text: {captcha_text}")
-
-                        # Find the input field and send the captcha text
-                        input_field = self.driver.find_element(By.XPATH, '//input[@class="form-control form-control-lg text-center rounded-0 remove-spaces"]')
-                        input_field.send_keys(captcha_text)
-                        log_message(self.app, "Captcha text entered")
-
-                        time.sleep(3)  # Wait for 5 seconds before proceeding
-
-                        # Check if the specified element is present
-                        if self.driver.find_elements(By.XPATH, '/html/body/div[6]/div/div[2]/div/div/div[1]'):
-                            log_message(self.app, "Setup complete. Select mode and start the bot. Make sure you have entered the correct URL.")
-                            break
-                    else:
-                        log_message(self.app, "Captcha image not found on the main page")
-                except Exception as e:
-                    log_message(self.app, f"Attempt {attempt + 1} failed: {e}")
-                    if attempt < 2:
-                        time.sleep(3)  # Wait for 3 seconds before retrying
-                    else:
-                        log_message(self.app, "Max attempts reached. Exiting. Please restart the application.")
-                        return  # Exit the function
-        except Exception as e:
-            log_message(self.app, f"Error during captcha solving: {e}")
-
-    def read_captcha(self, image):
-        config = r'--oem 3 --psm 6'
-        return pytesseract.image_to_string(image, config=config)
-
-    def parse_wait_time(self, text):
-        match = re.search(r'(\d+) minute\(s\) (\d{1,2}) second\(s\)', text)
-        if not match:
-            match = re.search(r'(\d+) minute\(s\) (\d{1,2}) seconds', text)
-        if match:
-            minutes = int(match.group(1))
-            seconds = int(match.group(2))
-            return minutes * 60 + seconds + 2
-        else:
-            log_message(self.app, f"Failed to parse wait time from text: {text}")
-        return 0
-
-    def increment_mode_count(self, mode):
-        if mode == "Views":
-            self.app.views += 1000
-            log_message(self.app, f"Views incremented by 1000")
-        elif mode == "Hearts":
-            increment = random.randint(11, 15)
-            self.app.hearts += increment
-            log_message(self.app, f"Hearts incremented by {increment}")
-        elif mode == "Shares":
-            increment = random.randint(70, 80)
-            self.app.shares += increment
-            log_message(self.app, f"Shares incremented by {increment}")
-        elif mode == "Favorites":
-            increment = random.randint(3, 6)
-            self.app.favorites += increment
-            log_message(self.app, f"Favorites incremented by {increment}")
-
-    def loop(self, vidUrl, mode, amount):
-        data = {
-            "Followers": {
-                "MainButton": '//button[@class="btn btn-primary rounded-0 t-followers-button"]',
-                "Input": '/html/body/div[9]/div/form/div/input', 
-                "Send": '/html/body/div[9]/div/div/div[1]/div/form/button',
-                "Search": '/html/body/div[9]/div/form/div/div/button',
-                "TextBeforeSend": '/html/body/div[9]/div/div/span',
-                "TextAfterSend": '/html/body/div[9]/div/div/span[1]'
-            },
-            "Hearts": {
-                "MainButton": '//button[@class="btn btn-primary rounded-0 t-hearts-button"]',
-                "Input": '/html/body/div[8]/div/form/div/input', 
-                "Send": '/html/body/div[8]/div/div/div[1]/div/form/button',
-                "Search": '/html/body/div[8]/div/form/div/div/button',
-                "TextBeforeSend": '/html/body/div[8]/div/div/span',
-                "TextAfterSend": '/html/body/div[8]/div/div/span[1]'
-            },
-            "Views": {
-                "MainButton": '//button[@class="btn btn-primary rounded-0 t-views-button"]',
-                "Input": '/html/body/div[10]/div/form/div/input', 
-                "Send": '/html/body/div[10]/div/div/div[1]/div/form/button',
-                "Search": '/html/body/div[10]/div/form/div/div/button',
-                "TextBeforeSend": '/html/body/div[10]/div/div/span',
-                "TextAfterSend": '/html/body/div[10]/div/div/span[1]'
-            },
-            "Shares": {
-                "MainButton": '//button[@class="btn btn-primary rounded-0 t-shares-button"]',
-                "Input": '/html/body/div[11]/div/form/div/input', 
-                "Send": '/html/body/div[11]/div/div/div[1]/div/form/button',
-                "Search": '/html/body/div[11]/div/form/div/div/button',
-                "TextBeforeSend": '/html/body/div[11]/div/div/span',
-                "TextAfterSend": '/html/body/div[11]/div/div/span[1]'
-            },
-            "Favorites": {
-                "MainButton": '//button[@class="btn btn-primary rounded-0 t-favorites-button"]',
-                "Input": '/html/body/div[12]/div/form/div/input', 
-                "Send": '/html/body/div[12]/div/div/div[1]/div/form/button',
-                "Search": '/html/body/div[12]/div/form/div/div/button',
-                "TextBeforeSend": '/html/body/div[12]/div/div/span',
-                "TextAfterSend": '/html/body/div[12]/div/div/span[1]'
-            },
-        }
-
-        while self.running:  # Check the flag in the loop condition
-            try:
-                self.driver.refresh()
-                time.sleep(2)
-                self.driver.find_element(By.XPATH, data[mode]["MainButton"]).click()
-                time.sleep(2)
-                self.driver.find_element(By.XPATH, data[mode]["Input"]).send_keys(vidUrl)
-                time.sleep(2)
-                self.driver.find_element(By.XPATH, data[mode]["Search"]).click()
-                time.sleep(6)
-
-                # Check for delay after Search
-                wait_text = self.driver.find_element(By.XPATH, data[mode]["TextBeforeSend"]).text
-                if wait_text:
-                    wait_seconds = self.parse_wait_time(wait_text)
-                    if wait_seconds > 0:
-                        current_time = time.time() - self.app.start_time
-                        future_time = time.strftime('%H:%M:%S', time.gmtime(current_time + wait_seconds))
-                        log_message(self.app, f"Wait {wait_seconds} seconds for your next submit (at {future_time} Elapsed Time)")
-                        time.sleep(wait_seconds)
-                        self.driver.refresh()
-                        continue  # Skip the rest of the loop and start over
-
-                self.driver.find_element(By.XPATH, data[mode]["Send"]).click()
-                time.sleep(7)
-                
-                # Extract wait time after Send
-                wait_text = self.driver.find_element(By.XPATH, data[mode]["TextAfterSend"]).text
-                time.sleep(1)
-                wait_seconds = self.parse_wait_time(wait_text)
-                current_time = time.time() - self.app.start_time
-                future_time = time.strftime('%H:%M:%S', time.gmtime(current_time + wait_seconds))
-                log_message(self.app, f"Wait {wait_seconds} seconds for your next submit (at {future_time} Elapsed Time)")
-
-                # Increment counts based on mode
-                self.increment_mode_count(mode)
-
-                # Check if the amount limit is reached
-                if (mode == "Views" and self.app.views >= amount) or \
-                   (mode == "Hearts" and self.app.hearts >= amount) or \
-                   (mode == "Followers" and self.app.followers >= amount) or \
-                   (mode == "Shares" and self.app.shares >= amount) or \
-                   (mode == "Favorites" and self.app.favorites >= amount):
-                    log_message(self.app, f"{mode} limit reached: {amount}")
-                    self.app.stop_bot()
-                    break
-
-                time.sleep(wait_seconds)
-            except Exception as e:
-                log_message(self.app, f"Error in {mode} loop: {e}")
-                self.driver.refresh()
-                time.sleep(5)
-
-=== File: utils.py ===
-import time
-import os
-import sys
-
-def log_message(app, message):
-    formatted_message = f"[{time.strftime('%H:%M:%S')}] {message}"
-    app.log_text.insert("end", formatted_message + "\n")
-    app.log_text.see("end")
-
-def resource_path(relative_path):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath("."), relative_path)
+    app.run(debug=True)
