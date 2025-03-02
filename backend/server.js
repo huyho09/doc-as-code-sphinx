@@ -8,6 +8,12 @@ const cors = require('cors');
 const { exec } = require('child_process');
 const { Tiktoken } = require('@dqbd/tiktoken');
 
+
+// Set proxy environment variables in Node.js
+process.env.HTTP_PROXY = 'http://127.0.0.1:3128';
+process.env.HTTPS_PROXY = 'http://127.0.0.1:3128';
+
+
 const app = express();
 const port = 3000;
 
