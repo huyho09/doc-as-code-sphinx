@@ -1,0 +1,112 @@
+Below is the Sphinx-compatible reStructuredText (RST) documentation for the provided code chunk. This documentation incorporates code comments, method descriptions, and individual file descriptions using standard RST directives.
+
+```rst
+TIKTOD V3
+=========
+
+.. image:: https://i.imgur.com/mpXJ5nf.png
+   :width: 300
+   :align: center
+   :alt: Logo
+
+Table of Contents
+-----------------
+- `Description`_
+- `Preview`_
+- `Features`_
+- `Watch the Installation Video (Outdated)`_
+- `Prerequisites`_
+- `Installation`_
+- `Usage`_
+- `Contributing`_
+- `Disclaimer`_
+- `Acknowledgements`_
+- `Issues`_
+
+Description
+-----------
+TIKTOD V3 is a bot application designed to automate interactions on Zefoy website, such as increasing views, hearts, followers, and shares on a specified video. The bot uses technologies like Selenium for web automation and OCR (Optical Character Recognition) for solving captchas.
+
+Preview
+-------
+Here is a screenshot of the TIKTOD V3 application:
+
+.. image:: https://i.imgur.com/X9PH9Hp.png
+   :width: 600
+   :align: left
+   :alt: TIKTOD V3 Screenshot
+
+Features
+--------
+- User-friendly interface using `customtkinter`.
+- Added feature to auto-detect available modes on the website.
+- Automatic captcha solving using OCR with `pytesseract`.
+- Light mode and dark mode support.
+- Detailed stats.
+
+Watch the Installation Video (Outdated)
+---------------------------------------
+If you are unsure how to install the application, please watch this `installation video <https://youtu.be/50gvfn1zg-w>`_ for a step-by-step guide, or for a demo of the bot.
+
+Prerequisites
+-------------
+- **Google Chrome** (version 89 or later) must be installed on your system. You can download it from `here <https://www.google.com/chrome/>`_.
+- Ensure **Tesseract OCR** is installed on your system. You can download it from `here <https://github.com/tesseract-ocr/tesseract/releases/latest>`_.
+  Additionally, make sure to add Tesseract to your system PATH. Follow this `tutorial <https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/>`_ for instructions on how to add it to the PATH on Windows 10.
+- **Python 3.7** or higher must be installed on your system. You can download it from `here <https://www.python.org/downloads/>`_.
+
+.. note::
+   If you plan to use the executable version, you do not need to install Python. Ensure that Python (if you plan to use the source code) and Tesseract OCR are added to your system's PATH.
+
+Installation
+------------
+1. Download the latest release zip or executable from the `releases page <https://github.com/kangoka/tiktodv3/releases>`_.
+2. If you downloaded the zip file, extract it to a directory of your choice.
+3. Navigate to the extracted directory or the directory containing the executable.
+
+Usage
+-----
+**Option 1: Using Source Code**
+
+1. Install the required packages:
+
+   .. code-block:: sh
+
+      pip install -r requirements.txt
+
+2. Run the application:
+
+   .. code-block:: sh
+
+      python app.py
+
+**Option 2: Using Executable**
+
+1. Run the executable file directly.
+2. Enter the TikTok video URL in the provided input field.
+3. Click the "Setup" button to initialize the bot.
+4. Select the desired mode (Views, Hearts, Followers, Shares) from the sidebar.
+5. Click the "Start" button to begin the automation process.
+6. To stop the application or change the mode, click the "Stop" button.
+
+Contributing
+------------
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+
+Disclaimer
+----------
+This project is intended for educational purposes only. The use of this bot to manipulate TikTok metrics may violate TikTok's terms of service and could result in legal consequences. Use it responsibly, ethically, and at your own risk.
+
+Acknowledgements
+----------------
+Thanks to Zefoy for providing free services and previous contributors for their valuable input and support.
+
+Issues
+------
+If you encounter any issues while using TIKTOD V3, please open an issue on the `GitHub repository <https://github.com/kangoka/tiktodv3/issues>`_ with detailed information about the issue, including:
+- Steps to reproduce the issue.
+- Any error messages or logs.
+- Your operating system and Python version.
+```
+
+This RST document is structured to cover various sections of the README file, providing interactivity through hyperlinks and notes, to ensure easy navigation and understanding of the TIKTOD V3 bot application.

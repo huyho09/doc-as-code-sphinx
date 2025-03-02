@@ -1,126 +1,545 @@
 
 === File: README.md ===
-\# ai-assistant
+<p align="center">
+    <img src="https://i.imgur.com/mpXJ5nf.png" alt="Logo" width="300">
+</p>
 
-###Project Structure
-```
-ai-chat-app/
-│── backend/
-│   │── app.py
-│   │── requirements.txt
-│   │── .env
-│   │── venv/ (virtual environment, not committed to Git)
-│   ├── static/
-│   │   ├── js/
-│   │   │   ├── chat.js
-│   │   ├── css/
-│   │   │   ├── styles.css
-│   ├── templates/
-│   │   ├── index.html
-│   ├── README.md
-│── frontend/
-│   │── index.html
-│   │── assets/
-│   │   ├── css/
-│   │   │   ├── styles.css
-│   │   ├── js/
-│   │   │   ├── app.js
-│── README.md
-```
-### Project Documentation
+## Table of Contents
+- [Description](#description)
+- [Preview](#preview)
+- [Features](#features)
+- [Watch the Installation Video](#watch-the-installation-video-outdated)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [Disclaimer](#disclaimer)
+- [Acknowledgements](#acknowledgements)
+- [Issues](#issues)
 
-#### AI Chat Web App
+# TIKTOD V3
 
-This is a simple AI-powered web chat application using HTML, CSS, JavaScript, Bootstrap, Python Flask, and OpenAI's GPT-4o. The frontend provides an interactive chat experience, while the backend handles AI responses via OpenAI's API.
+## Description
+TIKTOD V3 is a bot application designed to automate interactions on Zefoy website, such as increasing views, hearts, followers, and shares on a specified video. The bot uses technologies like Selenium for web automation and OCR (Optical Character Recognition) for solving captchas.
 
----
+## Preview
+Here is a screenshot of the TIKTOD V3 application:
 
-#### **Features**
-- A sidebar navigation for different AI assistants:
-  - **Essay Writer**
-  - **Story Teller**
-  - **Math Solver**
-  - **Email Writer**
-  - **Translator**
-  - **Code Generator**
-- Chat Interface:
-  - User messages appear on the right.
-  - AI responses appear on the left.
-  - Suggested prompts for each assistant.
+<p align="left">
+    <img src="https://i.imgur.com/X9PH9Hp.png" alt="TIKTOD V3 Screenshot" width="600">
+</p>
 
----
+## Features
+- User-friendly interface using `customtkinter`.
+- Added feature to auto-detect available modes on the website.
+- Automatic captcha solving using OCR with `pytesseract`.
+- Light mode and dark mode support.
+- Detailed stats.
 
-#### **Installation Guide**
+## Watch the Installation Video (outdated)
+If you are unsure how to install the application, please watch this [installation video](https://youtu.be/50gvfn1zg-w) for a step-by-step guide, or for a demo of the bot.
 
-#### **Backend Setup**
-1. Install Python (≥3.8) if not installed.
-2. Clone the repository:
-   ```sh
-   git clone https://github.com/your-repo/ai-chat-app.git
-   cd ai-chat-app/backend
+## Prerequisites
+- Google Chrome (version 89 or later) must be installed on your system. You can download it from [here](https://www.google.com/chrome/).
+- Ensure Tesseract OCR is installed on your system. You can download it from [here](https://github.com/tesseract-ocr/tesseract/releases/latest). 
+Additionally, make sure to add Tesseract to your system PATH. Follow this [tutorial](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/) for instructions on how to add it to the PATH on Windows 10.
+- Python 3.7 or higher must be installed on your system. You can download it from [here](https://www.python.org/downloads/).
+
+> **Note:** If you plan to use the executable version, you do not need to install Python. Ensure that Python (if you plan to use the source code) and Tesseract OCR are added to your system's PATH.
 
 
+## Installation
 
-#### Create and activate a virtual environment:
-##### On Windows:
-```
-python -m venv venv
-venv\Scripts\activate
-```
-##### On Mac/Linux:
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-#### Install dependencies:
-```
-pip install -r requirements.txt
-```
-#### Set up .env file with OpenAI API key:
-```
-OPENAI_API_KEY=your-api-key
-```
-#### Run the Flask server:
-```
-python app.py
-```
+1. Download the latest release zip or executable from the [releases page](https://github.com/kangoka/tiktodv3/releases).
+2. If you downloaded the zip file, extract it to a directory of your choice.
+3. Navigate to the extracted directory or the directory containing the executable.
 
-#### Frontend Setup
-No installation required. Just open index.html in a browser.
+## Usage
 
-### How It Works
-1. User selects an AI assistant from the sidebar.
-2. Suggested prompts appear.
-3. User enters a prompt.
-4. The request is sent to the Flask backend.
-5. The AI (GPT-4o) responds, and the response is displayed in the chat.
+### Option 1: Using Source Code
 
-### File Structure
-`backend/` contains the Flask backend.
-`frontend/` holds the HTML, CSS, and JS files for the UI.
-`README.md` contains setup and usage instructions.
+1. Install the required packages:
+    ```sh
+    pip install -r requirements.txt
+    ```
+2. Run the application:
+    ```sh
+    python app.py
+    ```
 
-### API Endpoint
+### Option 2: Using Executable
 
-POST `/api/chat`
-- Request:
-```
-{
-  "assistant_type": "Essay",
-  "user_message": "Write an essay on climate change"
-}
-```
-- Response:
-```
-{
-  "response": "Climate change is a pressing issue..."
-}
-```
+1. Run the executable file directly.
 
-### Future Improvements
-- User authentication.
-- Save chat history.
-- Dark mode toggle.
-=== File: backend/app.py ===
+2. Enter the TikTok video URL in the provided input field.
+3. Click the "Setup" button to initialize the bot.
+4. Select the desired mode (Views, Hearts, Followers, Shares) from the sidebar.
+5. Click the "Start" button to begin the automation process.
+6. To stop the application or change the mode, click the "Stop" button.
 
-=== File: frontend/script.js ===
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+
+## Disclaimer
+
+This project is intended for educational purposes only. The use of this bot to manipulate TikTok metrics may violate TikTok's terms of service and could result in legal consequences. Use it responsibly, ethically, and at your own risk.
+
+## Acknowledgements
+
+Thanks to Zefoy for providing free services and previous contributors for their valuable input and support.
+
+## Issues
+
+If you encounter any issues while using TIKTOD V3, please open an issue on the [GitHub repository](https://github.com/kangoka/tiktodv3/issues) with detailed information about the issue, including:
+   - Steps to reproduce the issue.
+   - Any error messages or logs.
+   - Your operating system and Python version.
+=== File: app.py ===
+import tkinter as tk
+import customtkinter as ctk
+import threading
+import time
+from PIL import Image  # Import the Image class
+from bot import Bot
+from utils import log_message, resource_path
+
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("TIKTOD V3")
+        self.geometry("800x600")
+        self.iconbitmap(resource_path("assets/logo.ico"))
+
+        # Configure grid layout
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        # Create sidebar frame with widgets
+        self.sidebar_frame = ctk.CTkFrame(self, width=200, corner_radius=0, fg_color="gray20")
+        self.sidebar_frame.grid(row=0, column=0, rowspan=5, sticky="nsew")
+        self.sidebar_frame.grid_rowconfigure(9, weight=1)
+
+        custom_font = ctk.CTkFont(family="Helvetica", size=14, weight="bold")
+
+        self.logo_image_dark = ctk.CTkImage(light_image=Image.open(resource_path("assets/dark-logo.png")), size=(100, 100))
+        self.logo_image_light = ctk.CTkImage(light_image=Image.open(resource_path("assets/light-logo.png")), size=(100, 100))
+        self.logo_image_label = ctk.CTkLabel(self.sidebar_frame, image=self.logo_image_dark, text="")
+        self.logo_image_label.grid(row=0, column=0, padx=20, pady=(20, 20))
+
+        self.link_label = ctk.CTkLabel(self.sidebar_frame, text="TikTok video URL:", font=custom_font, anchor="w")  # Added anchor="w"
+        self.link_label.grid(row=1, column=0, padx=20, pady=1, sticky="w")  # Added sticky="w"
+        self.link_entry = ctk.CTkEntry(self.sidebar_frame, width=180, font=custom_font)
+        self.link_entry.grid(row=2, column=0, padx=20, pady=1)
+
+        self.amount_label = ctk.CTkLabel(self.sidebar_frame, text="Amount:", font=custom_font, anchor="w")  # New label
+        self.amount_label.grid(row=3, column=0, padx=20, pady=1, sticky="w")  # New label grid
+        self.amount_entry = ctk.CTkEntry(self.sidebar_frame, width=180, font=custom_font)  # New entry
+        self.amount_entry.grid(row=4, column=0, padx=20, pady=1)  # New entry grid
+
+        self.start_button = ctk.CTkButton(self.sidebar_frame, text="Setup", command=lambda: threading.Thread(target=self.setup_bot).start(), font=custom_font)
+        self.start_button.grid(row=6, column=0, padx=20, pady=20)  # Adjusted row to move the button lower
+
+        # Create main frame with tab view for log and stats
+        self.main_frame = ctk.CTkFrame(self, corner_radius=0)
+        self.main_frame.grid(row=0, column=1, sticky="nsew")
+        self.main_frame.grid_rowconfigure(1, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+
+        self.tab_view = ctk.CTkTabview(self.main_frame)
+        self.tab_view.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+
+        self.log_tab = self.tab_view.add("Log")
+        self.log_text = ctk.CTkTextbox(self.log_tab, height=300, width=600, font=custom_font)
+        self.log_text.pack(padx=20, pady=10, fill="both", expand=True)
+
+        self.stats_tab = self.tab_view.add("Stats")
+        self.stats_tab.grid_rowconfigure(0, weight=1)
+        self.stats_tab.grid_columnconfigure(0, weight=1)
+
+        self.stats_frame = ctk.CTkFrame(self.stats_tab)
+        self.stats_frame.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+
+        self.stats_labels = {
+            "views": ctk.CTkLabel(self.stats_frame, text="Views Sent: 0", font=custom_font),
+            "hearts": ctk.CTkLabel(self.stats_frame, text="Hearts Sent: 0", font=custom_font),
+            "followers": ctk.CTkLabel(self.stats_frame, text="Followers Sent: 0", font=custom_font),
+            "shares": ctk.CTkLabel(self.stats_frame, text="Shares Sent: 0", font=custom_font),
+            "favorites": ctk.CTkLabel(self.stats_frame, text="Favorites Sent: 0", font=custom_font),
+            "elapsed_time": ctk.CTkLabel(self.stats_frame, text="Elapsed Time: 00:00:00", font=custom_font)
+        }
+
+        for i, label in enumerate(self.stats_labels.values()):
+            label.grid(row=i, column=0, padx=20, pady=5, sticky="w")
+
+        self.running = False  # Add a flag to control the loop
+        self.mode_var = tk.StringVar(value="Views")  # Initialize mode_var
+        self.bot = Bot(self, log_message)
+        self.elapsed_time = 0  # Initialize elapsed_time
+        self.views = 0  # Initialize views
+        self.hearts = 0  # Initialize hearts
+        self.followers = 0  # Initialize followers
+        self.shares = 0  # Initialize shares
+        self.favorites = 0  # Initialize favorites
+
+        self.theme_switch_var = tk.StringVar(value="dark")
+        self.theme_switch = ctk.CTkSwitch(self.sidebar_frame, text="Dark Mode", variable=self.theme_switch_var, onvalue="dark", offvalue="light", command=self.switch_theme, font=custom_font)
+        self.theme_switch.grid(row=10, column=0, padx=20, pady=10, sticky="s")
+
+        self.version_label = ctk.CTkLabel(self, text="Version 1.2.0", fg_color="transparent")
+        self.version_label.grid(row=5, column=1, padx=20, pady=(10, 0), sticky="se")
+
+        self.github_link = ctk.CTkLabel(self, text="https://github.com/kangoka/tiktodv3", fg_color="transparent", cursor="hand2")
+        self.github_link.grid(row=6, column=1, padx=20, pady=(0, 10), sticky="se")
+        self.github_link.bind("<Button-1>", lambda e: self.open_github())
+
+    def open_github(self):
+        import webbrowser
+        webbrowser.open("https://github.com/kangoka/tiktodv3")
+
+    def switch_theme(self):
+        if self.theme_switch_var.get() == "dark":
+            ctk.set_appearance_mode("dark")
+            self.sidebar_frame.configure(fg_color="gray20")
+            self.logo_image_label.configure(image=self.logo_image_dark)
+        else:
+            ctk.set_appearance_mode("light")
+            self.sidebar_frame.configure(fg_color="white")
+            self.logo_image_label.configure(image=self.logo_image_light)
+
+    def setup_bot(self):
+        self.bot.setup_bot()
+
+    def start_bot(self):
+        auto = self.mode_var.get()
+        vidUrl = self.link_entry.get()
+        
+        try:
+            amount = int(self.amount_entry.get())  # Get the amount entered and ensure it is a number
+        except ValueError:
+            log_message(self, "Amount must be a number")
+            return
+
+        if auto in ["Views", "Hearts", "Followers", "Shares", "Favorites"]:
+            if not self.running:
+                self.start_time = time.time() - self.elapsed_time  # Continue from the last elapsed time
+                self.log_text.delete(1.0, tk.END)  # Clear the log area
+                log_message(self, "TIKTOD V3")
+                log_message(self, "Log:")
+
+            self.running = True  # Set the flag to True
+            self.bot.running = True  # Ensure the bot's running flag is also set to True
+
+            self.link_entry.configure(state="disabled")  # Disable the URL entry
+            self.amount_entry.configure(state="disabled")  # Disable the amount entry
+            self.mode_menu.configure(state="disabled")  # Disable the option menu
+
+            threading.Thread(target=self.update_stats_label).start()  # Start the stats update thread
+
+            threading.Thread(target=self.bot.loop, args=(vidUrl, auto, amount)).start()  # Pass the amount to the bot loop
+            
+            self.start_button.configure(text="Stop", command=self.stop_bot)
+        else:
+            log_message(self, f"{auto} is not a valid option. Please pick Views, Hearts, Followers, Shares, or Favorites")
+
+    def stop_bot(self):
+        log_message(self, "Bot stopped")
+
+        self.link_entry.configure(state="normal")  # Enable the URL entry
+        self.amount_entry.configure(state="normal")  # Enable the amount entry
+        self.mode_menu.configure(state="normal")  # Enable the option menu
+
+        self.running = False  # Set the flag to False
+        self.bot.running = False  # Ensure the bot's running flag is also set to False
+        self.elapsed_time = time.time() - self.start_time  # Save the elapsed time
+
+        self.start_button.configure(text="Start", command=self.start_bot)
+
+    def update_stats_label(self):
+        while self.running:
+            time_elapsed = time.strftime('%H:%M:%S', time.gmtime(time.time() - self.start_time))
+            self.stats_labels["elapsed_time"].configure(text=f"Elapsed Time: {time_elapsed}")
+            self.stats_labels["views"].configure(text=f"Views Sent: {self.views}")
+            self.stats_labels["hearts"].configure(text=f"Hearts Sent: {self.hearts}")
+            self.stats_labels["followers"].configure(text=f"Followers Sent: {self.followers}")
+            self.stats_labels["shares"].configure(text=f"Shares Sent: {self.shares}")
+            self.stats_labels["favorites"].configure(text=f"Favorites Sent: {self.favorites}")
+            time.sleep(1)
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
+
+=== File: bot.py ===
+import chromedriver_autoinstaller
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from PIL import Image
+import pytesseract
+import time
+import random
+import customtkinter as ctk
+import tkinter as tk
+import re
+from utils import log_message, resource_path
+
+class Bot:
+    def __init__(self, app, log_callback):
+        self.app = app
+        self.log_callback = log_callback
+        self.driver = None
+        self.running = False
+
+    def setup_bot(self):
+        log_message(self.app, "Setting up the bot...")
+        # Automatically install the correct version of ChromeDriver
+        chromedriver_autoinstaller.install()
+        
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Enable headless mode
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-webgl")
+        chrome_options.add_argument("--disable-software-rasterizer")
+        chrome_options.add_argument("--log-level=3")  # Suppress most logs
+        chrome_options.add_argument("--disable-logging")  # Disable logging
+        
+        self.driver = webdriver.Chrome(options=chrome_options)
+
+        # Block requests to fundingchoicesmessages.google.com
+        self.driver.execute_cdp_cmd(
+            "Network.setBlockedURLs",
+            {"urls": ["https://fundingchoicesmessages.google.com/*"]}
+        )
+        self.driver.execute_cdp_cmd("Network.enable", {})  # Enable network interception
+
+        self.get_captcha()
+
+        # Create a frame for the mode selection
+        self.app.mode_frame = ctk.CTkFrame(self.app.sidebar_frame, corner_radius=0)
+        self.app.mode_frame.grid(row=5, column=0, padx=20, pady=10, sticky="nsew")
+
+        self.app.mode_label = ctk.CTkLabel(self.app.mode_frame, text="Select Mode:")
+        self.app.mode_label.grid(row=0, column=0, padx=20, pady=10)
+        self.app.mode_var = tk.StringVar(value="----------")
+
+        available_modes = []
+        buttons = {
+            "Followers": '//button[@class="btn btn-primary rounded-0 t-followers-button"]',
+            "Hearts": '//button[@class="btn btn-primary rounded-0 t-hearts-button"]',
+            "Views": '//button[@class="btn btn-primary rounded-0 t-views-button"]',
+            "Shares": '//button[@class="btn btn-primary rounded-0 t-shares-button"]',
+            "Favorites": '//button[@class="btn btn-primary rounded-0 t-favorites-button"]',
+            "Live Stream": '//button[@class="btn btn-primary rounded-0 t-livestream-button"]'
+        }
+
+        for text, xpath in buttons.items():
+            try:
+                button = self.driver.find_element(By.XPATH, xpath)
+                if not button.get_attribute("disabled"):
+                    available_modes.append(text)
+            except Exception as e:
+                log_message(self.app, f"Error finding button {text}: {e}")
+
+        self.app.mode_menu = ctk.CTkOptionMenu(self.app.mode_frame, variable=self.app.mode_var, values=available_modes)
+        self.app.mode_menu.grid(row=1, column=0, padx=20, pady=10)
+
+        self.app.start_button.configure(text="Start", command=self.app.start_bot)
+
+    def get_captcha(self):
+        url = "http://zefoy.com"  # Replace with the actual URL of the main page
+
+        try:
+            self.driver.get(url)
+            # Wait for the page to load
+            WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+
+            for attempt in range(3):
+                try:
+                    # Wait for the captcha image to be present
+                    captcha_img_tag = WebDriverWait(self.driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, '//img[@class="img-thumbnail card-img-top border-0"]'))
+                    )  # Using an XPath selector
+
+                    if captcha_img_tag:
+                        log_message(self.app, "Captcha image found")
+                        # Take a screenshot of the captcha image element
+                        captcha_img_tag.screenshot('captcha.png')
+                        log_message(self.app, "Captcha saved as captcha.png")
+                        image = Image.open('captcha.png')
+                        captcha_text = self.read_captcha(image)
+                        log_message(self.app, f"Captcha text: {captcha_text}")
+
+                        # Find the input field and send the captcha text
+                        input_field = self.driver.find_element(By.XPATH, '//input[@class="form-control form-control-lg text-center rounded-0 remove-spaces"]')
+                        input_field.send_keys(captcha_text)
+                        log_message(self.app, "Captcha text entered")
+
+                        time.sleep(3)  # Wait for 5 seconds before proceeding
+
+                        # Check if the specified element is present
+                        if self.driver.find_elements(By.XPATH, '/html/body/div[6]/div/div[2]/div/div/div[1]'):
+                            log_message(self.app, "Setup complete. Select mode and start the bot. Make sure you have entered the correct URL.")
+                            break
+                    else:
+                        log_message(self.app, "Captcha image not found on the main page")
+                except Exception as e:
+                    log_message(self.app, f"Attempt {attempt + 1} failed: {e}")
+                    if attempt < 2:
+                        time.sleep(3)  # Wait for 3 seconds before retrying
+                    else:
+                        log_message(self.app, "Max attempts reached. Exiting. Please restart the application.")
+                        return  # Exit the function
+        except Exception as e:
+            log_message(self.app, f"Error during captcha solving: {e}")
+
+    def read_captcha(self, image):
+        config = r'--oem 3 --psm 6'
+        return pytesseract.image_to_string(image, config=config)
+
+    def parse_wait_time(self, text):
+        match = re.search(r'(\d+) minute\(s\) (\d{1,2}) second\(s\)', text)
+        if not match:
+            match = re.search(r'(\d+) minute\(s\) (\d{1,2}) seconds', text)
+        if match:
+            minutes = int(match.group(1))
+            seconds = int(match.group(2))
+            return minutes * 60 + seconds + 2
+        else:
+            log_message(self.app, f"Failed to parse wait time from text: {text}")
+        return 0
+
+    def increment_mode_count(self, mode):
+        if mode == "Views":
+            self.app.views += 1000
+            log_message(self.app, f"Views incremented by 1000")
+        elif mode == "Hearts":
+            increment = random.randint(11, 15)
+            self.app.hearts += increment
+            log_message(self.app, f"Hearts incremented by {increment}")
+        elif mode == "Shares":
+            increment = random.randint(70, 80)
+            self.app.shares += increment
+            log_message(self.app, f"Shares incremented by {increment}")
+        elif mode == "Favorites":
+            increment = random.randint(3, 6)
+            self.app.favorites += increment
+            log_message(self.app, f"Favorites incremented by {increment}")
+
+    def loop(self, vidUrl, mode, amount):
+        data = {
+            "Followers": {
+                "MainButton": '//button[@class="btn btn-primary rounded-0 t-followers-button"]',
+                "Input": '/html/body/div[9]/div/form/div/input', 
+                "Send": '/html/body/div[9]/div/div/div[1]/div/form/button',
+                "Search": '/html/body/div[9]/div/form/div/div/button',
+                "TextBeforeSend": '/html/body/div[9]/div/div/span',
+                "TextAfterSend": '/html/body/div[9]/div/div/span[1]'
+            },
+            "Hearts": {
+                "MainButton": '//button[@class="btn btn-primary rounded-0 t-hearts-button"]',
+                "Input": '/html/body/div[8]/div/form/div/input', 
+                "Send": '/html/body/div[8]/div/div/div[1]/div/form/button',
+                "Search": '/html/body/div[8]/div/form/div/div/button',
+                "TextBeforeSend": '/html/body/div[8]/div/div/span',
+                "TextAfterSend": '/html/body/div[8]/div/div/span[1]'
+            },
+            "Views": {
+                "MainButton": '//button[@class="btn btn-primary rounded-0 t-views-button"]',
+                "Input": '/html/body/div[10]/div/form/div/input', 
+                "Send": '/html/body/div[10]/div/div/div[1]/div/form/button',
+                "Search": '/html/body/div[10]/div/form/div/div/button',
+                "TextBeforeSend": '/html/body/div[10]/div/div/span',
+                "TextAfterSend": '/html/body/div[10]/div/div/span[1]'
+            },
+            "Shares": {
+                "MainButton": '//button[@class="btn btn-primary rounded-0 t-shares-button"]',
+                "Input": '/html/body/div[11]/div/form/div/input', 
+                "Send": '/html/body/div[11]/div/div/div[1]/div/form/button',
+                "Search": '/html/body/div[11]/div/form/div/div/button',
+                "TextBeforeSend": '/html/body/div[11]/div/div/span',
+                "TextAfterSend": '/html/body/div[11]/div/div/span[1]'
+            },
+            "Favorites": {
+                "MainButton": '//button[@class="btn btn-primary rounded-0 t-favorites-button"]',
+                "Input": '/html/body/div[12]/div/form/div/input', 
+                "Send": '/html/body/div[12]/div/div/div[1]/div/form/button',
+                "Search": '/html/body/div[12]/div/form/div/div/button',
+                "TextBeforeSend": '/html/body/div[12]/div/div/span',
+                "TextAfterSend": '/html/body/div[12]/div/div/span[1]'
+            },
+        }
+
+        while self.running:  # Check the flag in the loop condition
+            try:
+                self.driver.refresh()
+                time.sleep(2)
+                self.driver.find_element(By.XPATH, data[mode]["MainButton"]).click()
+                time.sleep(2)
+                self.driver.find_element(By.XPATH, data[mode]["Input"]).send_keys(vidUrl)
+                time.sleep(2)
+                self.driver.find_element(By.XPATH, data[mode]["Search"]).click()
+                time.sleep(6)
+
+                # Check for delay after Search
+                wait_text = self.driver.find_element(By.XPATH, data[mode]["TextBeforeSend"]).text
+                if wait_text:
+                    wait_seconds = self.parse_wait_time(wait_text)
+                    if wait_seconds > 0:
+                        current_time = time.time() - self.app.start_time
+                        future_time = time.strftime('%H:%M:%S', time.gmtime(current_time + wait_seconds))
+                        log_message(self.app, f"Wait {wait_seconds} seconds for your next submit (at {future_time} Elapsed Time)")
+                        time.sleep(wait_seconds)
+                        self.driver.refresh()
+                        continue  # Skip the rest of the loop and start over
+
+                self.driver.find_element(By.XPATH, data[mode]["Send"]).click()
+                time.sleep(7)
+                
+                # Extract wait time after Send
+                wait_text = self.driver.find_element(By.XPATH, data[mode]["TextAfterSend"]).text
+                time.sleep(1)
+                wait_seconds = self.parse_wait_time(wait_text)
+                current_time = time.time() - self.app.start_time
+                future_time = time.strftime('%H:%M:%S', time.gmtime(current_time + wait_seconds))
+                log_message(self.app, f"Wait {wait_seconds} seconds for your next submit (at {future_time} Elapsed Time)")
+
+                # Increment counts based on mode
+                self.increment_mode_count(mode)
+
+                # Check if the amount limit is reached
+                if (mode == "Views" and self.app.views >= amount) or \
+                   (mode == "Hearts" and self.app.hearts >= amount) or \
+                   (mode == "Followers" and self.app.followers >= amount) or \
+                   (mode == "Shares" and self.app.shares >= amount) or \
+                   (mode == "Favorites" and self.app.favorites >= amount):
+                    log_message(self.app, f"{mode} limit reached: {amount}")
+                    self.app.stop_bot()
+                    break
+
+                time.sleep(wait_seconds)
+            except Exception as e:
+                log_message(self.app, f"Error in {mode} loop: {e}")
+                self.driver.refresh()
+                time.sleep(5)
+
+=== File: utils.py ===
+import time
+import os
+import sys
+
+def log_message(app, message):
+    formatted_message = f"[{time.strftime('%H:%M:%S')}] {message}"
+    app.log_text.insert("end", formatted_message + "\n")
+    app.log_text.see("end")
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)

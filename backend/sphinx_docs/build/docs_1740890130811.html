@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Table of Contents &#8212; DocGen 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to DocGen’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>Below is the Sphinx-compatible reStructuredText (RST) documentation for the provided code chunk. This documentation incorporates code comments, method descriptions, and individual file descriptions using standard RST directives.</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>rst
+TIKTOD V3
+=========</p>
+<a class="reference internal image-reference" href="https://i.imgur.com/mpXJ5nf.png"><img alt="Logo" class="align-center" src="https://i.imgur.com/mpXJ5nf.png" style="width: 300px;" />
+</a>
+<section id="table-of-contents">
+<h1>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="#description">Description</a></p></li>
+<li><p><a class="reference internal" href="#preview">Preview</a></p></li>
+<li><p><a class="reference internal" href="#features">Features</a></p></li>
+<li><p><a class="reference internal" href="#watch-the-installation-video-outdated">Watch the Installation Video (Outdated)</a></p></li>
+<li><p><a class="reference internal" href="#prerequisites">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#installation">Installation</a></p></li>
+<li><p><a class="reference internal" href="#usage">Usage</a></p></li>
+<li><p><a class="reference internal" href="#contributing">Contributing</a></p></li>
+<li><p><a class="reference internal" href="#disclaimer">Disclaimer</a></p></li>
+<li><p><a class="reference internal" href="#acknowledgements">Acknowledgements</a></p></li>
+<li><p><a class="reference internal" href="#issues">Issues</a></p></li>
+</ul>
+</section>
+<section id="description">
+<h1>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h1>
+<p>TIKTOD V3 is a bot application designed to automate interactions on Zefoy website, such as increasing views, hearts, followers, and shares on a specified video. The bot uses technologies like Selenium for web automation and OCR (Optical Character Recognition) for solving captchas.</p>
+</section>
+<section id="preview">
+<h1>Preview<a class="headerlink" href="#preview" title="Link to this heading">¶</a></h1>
+<p>Here is a screenshot of the TIKTOD V3 application:</p>
+<a class="reference internal image-reference" href="https://i.imgur.com/X9PH9Hp.png"><img alt="TIKTOD V3 Screenshot" class="align-left" src="https://i.imgur.com/X9PH9Hp.png" style="width: 600px;" />
+</a>
+</section>
+<section id="features">
+<h1>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p>User-friendly interface using <cite>customtkinter</cite>.</p></li>
+<li><p>Added feature to auto-detect available modes on the website.</p></li>
+<li><p>Automatic captcha solving using OCR with <cite>pytesseract</cite>.</p></li>
+<li><p>Light mode and dark mode support.</p></li>
+<li><p>Detailed stats.</p></li>
+</ul>
+</section>
+<section id="watch-the-installation-video-outdated">
+<h1>Watch the Installation Video (Outdated)<a class="headerlink" href="#watch-the-installation-video-outdated" title="Link to this heading">¶</a></h1>
+<p>If you are unsure how to install the application, please watch this <a class="reference external" href="https://youtu.be/50gvfn1zg-w">installation video</a> for a step-by-step guide, or for a demo of the bot.</p>
+</section>
+<section id="prerequisites">
+<h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><strong>Google Chrome</strong> (version 89 or later) must be installed on your system. You can download it from <a class="reference external" href="https://www.google.com/chrome/">here</a>.</p></li>
+<li><p>Ensure <strong>Tesseract OCR</strong> is installed on your system. You can download it from <a class="reference external" href="https://github.com/tesseract-ocr/tesseract/releases/latest">here</a>.
+Additionally, make sure to add Tesseract to your system PATH. Follow this <a class="reference external" href="https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/">tutorial</a> for instructions on how to add it to the PATH on Windows 10.</p></li>
+<li><p><strong>Python 3.7</strong> or higher must be installed on your system. You can download it from <a class="reference external" href="https://www.python.org/downloads/">here</a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you plan to use the executable version, you do not need to install Python. Ensure that Python (if you plan to use the source code) and Tesseract OCR are added to your system’s PATH.</p>
+</div>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<ol class="arabic simple">
+<li><p>Download the latest release zip or executable from the <a class="reference external" href="https://github.com/kangoka/tiktodv3/releases">releases page</a>.</p></li>
+<li><p>If you downloaded the zip file, extract it to a directory of your choice.</p></li>
+<li><p>Navigate to the extracted directory or the directory containing the executable.</p></li>
+</ol>
+</section>
+<section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h1>
+<p><strong>Option 1: Using Source Code</strong></p>
+<ol class="arabic">
+<li><p>Install the required packages:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Run the application:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>app.py
+</pre></div>
+</div>
+</li>
+</ol>
+<p><strong>Option 2: Using Executable</strong></p>
+<ol class="arabic simple">
+<li><p>Run the executable file directly.</p></li>
+<li><p>Enter the TikTok video URL in the provided input field.</p></li>
+<li><p>Click the “Setup” button to initialize the bot.</p></li>
+<li><p>Select the desired mode (Views, Hearts, Followers, Shares) from the sidebar.</p></li>
+<li><p>Click the “Start” button to begin the automation process.</p></li>
+<li><p>To stop the application or change the mode, click the “Stop” button.</p></li>
+</ol>
+</section>
+<section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h1>
+<p>Contributions are welcome! Please fork the repository and submit a pull request with your changes.</p>
+</section>
+<section id="disclaimer">
+<h1>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading">¶</a></h1>
+<p>This project is intended for educational purposes only. The use of this bot to manipulate TikTok metrics may violate TikTok’s terms of service and could result in legal consequences. Use it responsibly, ethically, and at your own risk.</p>
+</section>
+<section id="acknowledgements">
+<h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading">¶</a></h1>
+<p>Thanks to Zefoy for providing free services and previous contributors for their valuable input and support.</p>
+</section>
+<section id="issues">
+<h1>Issues<a class="headerlink" href="#issues" title="Link to this heading">¶</a></h1>
+<p>If you encounter any issues while using TIKTOD V3, please open an issue on the <a class="reference external" href="https://github.com/kangoka/tiktodv3/issues">GitHub repository</a> with detailed information about the issue, including:
+- Steps to reproduce the issue.
+- Any error messages or logs.
+- Your operating system and Python version.
+<a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
+<p>This RST document is structured to cover various sections of the README file, providing interactivity through hyperlinks and notes, to ensure easy navigation and understanding of the TIKTOD V3 bot application.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">DocGen</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Table of Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#preview">Preview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#watch-the-installation-video-outdated">Watch the Installation Video (Outdated)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#issues">Issues</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to DocGen’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Huy Ho.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/docs_1740890130811.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
