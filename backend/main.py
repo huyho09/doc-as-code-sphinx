@@ -3,6 +3,7 @@ import re
 import time
 import requests
 import shutil
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory
 from openai import OpenAI
 from tiktoken import get_encoding
@@ -10,7 +11,7 @@ from pathlib import Path
 import subprocess
 
 # Load environment variables
-from dotenv import load_dotenv
+
 load_dotenv()
 
 
