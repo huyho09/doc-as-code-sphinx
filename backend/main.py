@@ -1,17 +1,14 @@
 import gitingest
 import os
-import asyncio
 import math
 import re
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import openai
-import aiofiles
 import subprocess
 from datetime import datetime
 import tiktoken
-from gitingest import ingest  # Import gitingest
 
 # Load environment variables from .env
 load_dotenv()
@@ -49,30 +46,6 @@ def count_tokens(text):
     # Fallback: Rough estimate (1 token ≈ 4 chars)
     return math.ceil(len(text) / 4)
 
-# Asynchronous function to fetch repo contents using gitingest and chunk
-# async def fetch_all_repo_contents(repo_url, extensions=['.js', '.py', '.ts', '.md']):
-#     # Use gitingest to fetch repo content
-#     summary, tree, content = ingest(repo_url)
-    
-#     # Since gitingest returns content as a string, we'll chunk it here
-#     chunks = []
-#     current_chunk = ''
-    
-#     # Split content by lines and chunk based on token limit
-#     lines = content.split('\n')
-#     for line in lines:
-#         if line.strip():  # Skip empty lines
-#             file_text = line if not line.startswith('=== File:') else f"\n{line}"  # Preserve formatting
-#             if count_tokens(current_chunk + file_text) > 25000:
-#                 chunks.append(current_chunk)
-#                 current_chunk = file_text
-#             else:
-#                 current_chunk += file_text
-    
-#     if current_chunk:
-#         chunks.append(current_chunk)
-    
-#     return chunks
 
 # Asynchronous function to call OpenAI with retry and exponential backoff
 def call_openai_with_retry(prompt):
@@ -90,7 +63,7 @@ def generate_docs():
     # Assuming gitingest.ingest is the correct function to call
     data = request.get_json()
     repo_url = data.get('repoUrl')
-    # subprocess.call(["gitingest", "https://github.com/i-voted-for-trump/is-odd", "-o", "../repo.txt"])
+    subprocess.Popen(["gitingest", repo_url, "-o", "../repo.txt"]).wait()
 
     # if not repo_url:
     #     return jsonify({'error': 'Repository URL is required'}), 400
@@ -130,18 +103,13 @@ def generate_docs():
             gpt_response = call_openai_with_retry(prompt)
             rst_parts.append(gpt_response.choices[0].message.content)
         
-        for _ in rst_parts:
-            print(_)
         
         sphinx_docs = '\n\n.. raw:: html\n\n   <hr>\n\n'.join(rst_parts)
 
         # Step 3: Set up Sphinx structure
-        sphinx_dir = os.path.join(os.path.dirname(__file__), 'sphinx_docs')
+        sphinx_dir = "./sphinx_docs"
         source_dir = os.path.join(sphinx_dir, 'source')
         build_dir = os.path.join(sphinx_dir, 'build')
-        os.makedirs(sphinx_dir, exist_ok=True)
-        os.makedirs(source_dir, exist_ok=True)
-        os.makedirs(build_dir, exist_ok=True)
 
         # Write RST file
         rst_file_name = f"docs_{int(datetime.now().timestamp())}.rst"
@@ -191,11 +159,7 @@ Welcome to DocGen's documentation!
         #     stderr=asyncio.subprocess.PIPE
         # )
         # stdout, stderr = process.communicate()
-        process = subprocess.call(["sphinx-build", "-b", "html", source_dir, build_dir])
-        if process != 0:
-            print(f"Sphinx Error: {stderr.decode()}")
-            raise Exception('Sphinx build failed')
-        print(f"Sphinx Output: {stdout.decode()}")
+        process = subprocess.call(["uv", "run", "sphinx-build", "-b", "html", source_dir, build_dir])
 
         # Step 5: Provide HTML download link
         html_file_name = f"docs_{int(datetime.now().timestamp())}.html"

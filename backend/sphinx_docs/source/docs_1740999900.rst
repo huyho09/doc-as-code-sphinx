@@ -1,0 +1,235 @@
+To generate Sphinx-compatible reStructuredText (RST) for the provided XML source code chunk, you can use the `.. code-block:: xml` directive. Here's how it would look:
+
+```rst
+===============================
+File: pom.xml
+===============================
+
+.. code-block:: xml
+
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>com.github</groupId>
+      <artifactId>egitdemo</artifactId>
+      <packaging>jar</packaging>
+      <version>1.0-SNAPSHOT</version>
+      <name>egitdemo</name>
+      <url>http://maven.apache.org</url>
+      <dependencies>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>3.8.1</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </project>
+```
+
+This will ensure that the XML code is properly formatted and syntax-highlighted (if supported) when rendered in Sphinx documentation.
+
+.. raw:: html
+
+   <hr>
+
+To document the provided properties file using Sphinx-compatible reStructuredText (RST), you can create a file with the following content. This is part 2/5, focusing on documenting the specific properties listed:
+
+```rst
+.. _resources-labels-properties:
+
+.. index::
+   single: properties file; resources/labels.properties
+
+================================================
+Labels Properties File
+================================================
+
+The `resources/labels.properties` file contains key-value pairs used for internationalization (i18n) and localization support within the application. Below are the properties defined in this file:
+
+.. list-table::
+   :widths: 15 85
+   :header-rows: 1
+
+   * - Property Key
+     - Description
+
+   * - ``app.title``
+     - The title of the application. This is displayed in the title bar or header section of the app. The current value is "Our App".
+
+   * - ``app.welcome``
+     - The welcome message displayed to users upon launching the application. The current message is "Welcome to the application".
+
+   * - ``app.goodbye``
+     - The farewell message displayed to users when they exit the application, indicating appreciation and hope for future use. The current message is "We hope you enjoyed using our application".
+
+   * - ``cli.usage``
+     - A note indicating that the application does not utilize a command line interface. The message is "This application doesn't use a command line interface".
+
+The `labels.properties` file plays a crucial role in ensuring that the application can be customized and translated into different languages. Each property key corresponds to a textual component in the app's UI or documentation.
+
+```
+
+In this documentation, we have outlined the purpose of the file, detailed each configuration key and its usage within the application, and provided an example of the current values. This presentation makes it easy for users or developers to understand the role of this properties file within the larger application.
+
+.. raw:: html
+
+   <hr>
+
+To generate Sphinx-compatible reStructuredText (RST) documentation for the provided Groovy source code, you would typically want to format the code within a code block directive, ensuring syntax highlighting is supported. Below is the RST documentation for your Groovy code:
+
+```rst
+.. _main_groovy:
+
+Main.groovy
+===========
+
+This file provides a Groovy script demonstrating basic arithmetic operations using static imports.
+
+.. code-block:: groovy
+
+    import static Square.square
+    import static Division.divide
+    import static Subtract.subtract
+    import static Sum.sum
+
+    def name = "Matthew"
+    int programmingPoints = 10
+
+    println "Hello ${name}"
+    println "${name} has at least ${programmingPoints} programming points."
+    println "${programmingPoints} squared is ${square(programmingPoints)}"
+    println "${programmingPoints} divided by 2 bonus points is ${divide(programmingPoints, 2)}"
+    println "${programmingPoints} minus 7 bonus points is ${subtract(programmingPoints, 7)}"
+    println "${programmingPoints} plus 3 bonus points is ${sum(programmingPoints, 3)}"
+
+Description
+-----------
+
+This script performs the following tasks:
+
+* Defines a name and initial programming points.
+* Prints a greeting to `name`.
+* Shows the result of squaring the programming points.
+* Divides the programming points by 2 and prints the result.
+* Subtracts 7 from the programming points and prints the result.
+* Adds 3 to the programming points and prints the result.
+
+Dependencies
+------------
+
+Ensure the following static methods are defined in their respective classes:
+
+- `Square.square(int)`
+- `Division.divide(int, int)`
+- `Subtract.subtract(int, int)`
+- `Sum.sum(int, int)`
+```
+
+This RST documentation includes a brief description and dependencies section to offer context and ensure clarity. In practice, you can also add cross-references or links to related documentation as needed.
+
+.. raw:: html
+
+   <hr>
+
+To generate Sphinx-compatible reStructuredText (RST) for documenting the provided Groovy code snippet, you can follow this structure:
+
+```rst
+.. _square-function:
+
+Square Function
+===============
+
+This section documents the square function found in the `Square.groovy` file.
+
+.. code-block:: groovy
+   :linenos:
+
+   static int square(int base) {
+       base * base
+   }
+
+Function Overview
+-----------------
+
+The `square` function computes the square of a given integer `base`.
+
+Parameters
+----------
+
+- **base** (int): The integer value to be squared.
+
+Returns
+-------
+
+- **int**: The square of the input integer `base`.
+
+Examples
+--------
+
+Here is an example usage of the `square` function:
+
+.. code-block:: groovy
+
+   int result = square(5)
+   println("The square of 5 is: " + result)
+
+This will output:
+
+```
+The square of 5 is: 25
+```
+```
+
+This RST document includes a title for the section, a code block displaying the Groovy source code, a brief overview of the function, details about its parameters and return type, and an example of how to use the function. The `:linenos:` option in the `.. code-block::` directive adds line numbers to the displayed code.
+
+.. raw:: html
+
+   <hr>
+
+To generate Sphinx-compatible reStructuredText (RST) documentation for the provided Groovy source code chunk, you can follow the format typically used for documenting code in Sphinx. Below is an example of how you might format this for inclusion in a Sphinx-based documentation project:
+
+```rst
+.. _src_subtract:
+
+Subtract.groovy
+===============
+
+This file contains a static method for performing subtraction between two integers.
+
+.. code-block:: groovy
+
+    static int subtract(int val1, val2) {
+        val1 - val2
+    }
+
+Function
+--------
+
+`subtract(val1, val2)`
+
+    This static method takes two integer arguments and returns their difference.
+
+    :param val1: The first integer value to be subtracted from.
+    :type val1: int
+    :param val2: The second integer value to subtract.
+    :type val2: int
+    :returns: The difference between `val1` and `val2`.
+    :rtype: int
+
+Usage Example
+-------------
+
+Here's a simple example of how you could use the `subtract` method:
+
+.. code-block:: groovy
+
+    def result = subtract(10, 5)
+    println("The result of subtraction is: " + result)
+```
+
+### Explanation:
+- **Title**: The file name is used as the title, and it's underlined with `=` for consistency with reStructuredText conventions.
+- **Code Block**: The `.. code-block:: groovy` directive is used to denote that the code should be highlighted as Groovy syntax.
+- **Function Section**: Describes the function, its parameters, and return type using `:param:` and `:returns:` directives for clarity.
+- **Usage Example**: Provides a simple example of how the method could be used, also wrapped in a Groovy code block.

@@ -1,0 +1,217 @@
+To generate Sphinx-compatible reStructuredText (RST) for the provided Maven `pom.xml` file, you can document it using a code block with the appropriate syntax highlighting specified for XML. Here is how you can do it:
+
+```rst
+================================================
+File: pom.xml
+================================================
+
+.. code-block:: xml
+
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>com.github</groupId>
+      <artifactId>egitdemo</artifactId>
+      <packaging>jar</packaging>
+      <version>1.0-SNAPSHOT</version>
+      <name>egitdemo</name>
+      <url>http://maven.apache.org</url>
+      <dependencies>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>3.8.1</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </project>
+```
+
+This RST snippet will display the XML code in a formatted block when rendered by Sphinx, with syntax highlighting appropriate for XML.
+
+.. raw:: html
+
+   <hr>
+
+To generate Sphinx-compatible reStructuredText (RST) documentation for the given source code chunk from the `resources/labels.properties` file, you can use the following RST format. This includes the appropriate sections and formatting to integrate this part with Sphinx:
+
+```rst
+.. _file-resources-labels-properties:
+
+Resources/Labels Properties
+===========================
+
+This section documents the contents of the `resources/labels.properties` file, which is used for defining various string literals in the application.
+
+.. code-block:: properties
+
+    # Application title
+    app.title=Our App
+
+    # Welcome message
+    app.welcome=Welcome to the application
+
+    # Good-bye message
+    app.goodbye=We hope you enjoyed using our application
+
+    # Command-line usage disclaimer
+    cli.usage=This application doesn't use a command line interface
+
+Property Explanations
+---------------------
+
+- **app.title**: Sets the title of the application as displayed in the UI.
+- **app.welcome**: Provides a welcome message to greet users upon launching the application.
+- **app.goodbye**: Displays a farewell message when users exit the application, with hopes of a positive experience.
+- **cli.usage**: Clarifies that this application does not include a command line interface, setting user expectations appropriately.
+```
+
+This RST documentation makes use of sections, code blocks, and lists to explain the purpose of each property within the properties file, capturing the essence of the source code while providing context for better understanding.
+
+.. raw:: html
+
+   <hr>
+
+Below is the Sphinx-compatible reStructuredText (RST) documentation for the provided Groovy source code chunk. This can be used within the context of a Sphinx documentation project:
+
+```rst
+.. File: src/Main.groovy
+   :part: 3/5
+
+Groovy Main Script
+==================
+
+This Groovy script demonstrates the use of static imports to perform basic arithmetic operations such as square, division, subtraction, and addition. It also prints out some messages using these operations.
+
+Source Code
+-----------
+
+.. code-block:: groovy
+
+    import static Square.square
+    import static Division.divide
+    import static Subtract.subtract
+    import static Sum.sum
+
+    def name = "Matthew"
+    int programmingPoints = 10
+
+    println "Hello ${name}"
+    println "${name} has at least ${programmingPoints} programming points."
+    println "${programmingPoints} squared is ${square(programmingPoints)}"
+    println "${programmingPoints} divided by 2 bonus points is ${divide(programmingPoints, 2)}"
+    println "${programmingPoints} minus 7 bonus points is ${subtract(programmingPoints, 7)}"
+    println "${programmingPoints} plus 3 bonus points is ${sum(programmingPoints, 3)}"
+
+Description
+-----------
+
+- **name**: A `String` containing the name "Matthew".
+- **programmingPoints**: An `int` initialized to 10, representing a score or points.
+- The script imports static utility functions for arithmetic operations from `Square`, `Division`, `Subtract`, and `Sum` modules.
+- It outputs a series of messages using Groovy's string interpolation, showcasing basic arithmetic on the `programmingPoints` variable.
+```
+
+This documentation block is designed to be part of a larger Sphinx-generated HTML or other format documentation, and is suitable for integration into projects that use Sphinx for generating documentation from reStructuredText source files.
+
+.. raw:: html
+
+   <hr>
+
+To generate Sphinx-compatible reStructuredText (RST) documentation for the provided Groovy source code, you should enclose your code within code blocks and provide an appropriate title and description. Below is a sample RST documentation for the Groovy method `square`:
+
+```rst
+Square.groovy
+=============
+
+This section documents the `square` function found in the `Square.groovy` file.
+
+.. code-block:: groovy
+
+    static int square(int base) {
+        base * base
+    }
+
+Description
+-----------
+
+The `square` function takes an integer `base` as input and returns its square. It is a static method, indicating that it belongs to the class itself rather than an instance, and can be called without creating an instance of the class.
+
+Parameters
+----------
+
+- **base** (int): The integer value that you want to square.
+
+Returns
+-------
+
+- **int**: The square of the input integer `base`.
+
+Usage Example
+-------------
+
+Given an integer value of 3:
+
+.. code-block:: groovy
+
+    int result = Square.square(3)
+    // result will be 9
+
+This method multiplies the `base` value by itself and returns the result.
+```
+
+This RST document provides structure to your documentation, describing the purpose and usage of the `square` function, including parameter and return information along with an example usage.
+
+.. raw:: html
+
+   <hr>
+
+To generate Sphinx-compatible reStructuredText (RST) documentation for the given Groovy source code, you can create a file with content that documents the `subtract` function. Below is an example of how you might structure the RST documentation for this portion of code:
+
+```rst
+.. _subtract-function:
+
+`subtract` Function
+===================
+
+.. code-block:: groovy
+
+    static int subtract(int val1, int val2) {
+        val1 - val2
+    }
+
+Description
+-----------
+
+The `subtract` function takes two integer arguments and returns the result of subtracting the second argument (`val2`) from the first argument (`val1`).
+
+Parameters
+----------
+
+- **val1** (int): The first integer value.
+- **val2** (int): The second integer value to subtract from `val1`.
+
+Returns
+-------
+
+- **int**: The result of the subtraction `val1 - val2`.
+
+Usage Example
+-------------
+
+Here is an example of how you might use the `subtract` function in a Groovy script:
+
+.. code-block:: groovy
+
+    def result = subtract(10, 5)
+    println(result) // Output will be 5
+
+Notes
+-----
+
+- This function is static, which means it can be called on the class itself without needing an instance.
+
+Remember, for this RST documentation to be integrated with Sphinx, make sure your documentation project is properly set up to include the Groovy source files and reference the correct paths and modules where necessary.
+``` 
+
+This RST format includes a directive for a code block to show the Groovy source code, followed by sections for the description, parameters, return type, a usage example, and additional notes. Adjust the structure as necessary to fit into your overall documentation structure.
