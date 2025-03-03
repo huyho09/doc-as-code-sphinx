@@ -5,19 +5,20 @@ import re
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import requests
 from openai import AsyncOpenAI
 import aiofiles
 import subprocess
 from datetime import datetime
 import tiktoken
+from gitingest import ingest  # Import gitingest
 
 # Load environment variables from .env
 load_dotenv()
 
 # Set proxy environment variables
-os.environ['HTTP_PROXY'] = 'http://127.0.0.1:3128'
-os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:3128'
+os.environ['http_proxy'] = 'http://localhost:3128'
+os.environ['https_proxy'] = 'http://localhost:3128'
+os.environ['no_proxy'] = 'http://localhost:3128'
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -47,46 +48,30 @@ def count_tokens(text):
     # Fallback: Rough estimate (1 token ≈ 4 chars)
     return math.ceil(len(text) / 4)
 
-# Asynchronous function to fetch repo contents recursively and chunk during fetch
-async def fetch_all_repo_contents(owner, repo, path='', token=os.getenv('GITHUB_TOKEN'), extensions=['.js', '.py', '.ts', '.md']):
-    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
-    headers = {'Authorization': f'Bearer {token}'}
+# Asynchronous function to fetch repo contents using gitingest and chunk
+async def fetch_all_repo_contents(repo_url, extensions=['.js', '.py', '.ts', '.md']):
+    # Use gitingest to fetch repo content
+    summary, tree, content = ingest(repo_url)
     
-    async with aiofiles.tempfile.NamedTemporaryFile() as temp:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-
-        chunks = []
-        current_chunk = ''
-
-        for item in data:
-            if item['type'] == 'file' and item['download_url'] and any(item['path'].endswith(ext) for ext in extensions):
-                file_response = requests.get(item['download_url'])
-                file_response.raise_for_status()
-                file_content = file_response.text
-                if len(file_content) > 500000:
-                    print(f"Skipping large file: {item['path']} ({len(file_content)} chars)")
-                    continue
-                file_text = f"\n=== File: {item['path']} ===\n{file_content}"
-                if count_tokens(current_chunk + file_text) > 25000:
-                    chunks.append(current_chunk)
-                    current_chunk = file_text
-                else:
-                    current_chunk += file_text
-            elif item['type'] == 'dir':
-                dir_chunks = await fetch_all_repo_contents(owner, repo, item['path'], token, extensions)
-                for dir_chunk in dir_chunks:
-                    if count_tokens(current_chunk + dir_chunk) > 25000:
-                        chunks.append(current_chunk)
-                        current_chunk = dir_chunk
-                    else:
-                        current_chunk += dir_chunk
-        
-        if current_chunk:
-            chunks.append(current_chunk)
-        
-        return chunks
+    # Since gitingest returns content as a string, we'll chunk it here
+    chunks = []
+    current_chunk = ''
+    
+    # Split content by lines and chunk based on token limit
+    lines = content.split('\n')
+    for line in lines:
+        if line.strip():  # Skip empty lines
+            file_text = line if not line.startswith('=== File:') else f"\n{line}"  # Preserve formatting
+            if count_tokens(current_chunk + file_text) > 25000:
+                chunks.append(current_chunk)
+                current_chunk = file_text
+            else:
+                current_chunk += file_text
+    
+    if current_chunk:
+        chunks.append(current_chunk)
+    
+    return chunks
 
 # Asynchronous function to call OpenAI with retry and exponential backoff
 async def call_openai_with_retry(prompt, retries=3, delay=1000):
@@ -95,7 +80,7 @@ async def call_openai_with_retry(prompt, retries=3, delay=1000):
             response = await openai.chat.completions.create(
                 model='gpt-4o',
                 messages=[{'role': 'user', 'content': prompt}],
-                max_tokens=1500
+                max_tokens=30000
             )
             return response
         except Exception as e:
@@ -119,11 +104,9 @@ async def generate_docs():
     if not match:
         return jsonify({'error': 'Invalid GitHub URL'}), 400
     
-    _, repo_owner, repo_name = match.groups()
-
     try:
-        # Step 1: Fetch filtered source code recursively as chunks
-        source_code_chunks = await fetch_all_repo_contents(repo_owner, repo_name)
+        # Step 1: Fetch filtered source code recursively as chunks using gitingest
+        source_code_chunks = await fetch_all_repo_contents(repo_url)
         if not source_code_chunks or len(source_code_chunks) == 0:
             return jsonify({'error': 'No relevant source code found (e.g., .js, .py, .ts, .md files)'}), 400
         
@@ -221,4 +204,5 @@ Welcome to DocGen's documentation!
         return jsonify({'error': 'Failed to generate documentation'}), 500
 
 if __name__ == '__main__':
+    port = 3000
     app.run(host='0.0.0.0', port=port, debug=True)
