@@ -1,14 +1,19 @@
-import gitingest
-import os
+import glob
 import math
+import os
 import re
+import shutil
+import subprocess
+from datetime import datetime
+
+import openai
+import tiktoken
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import openai
-import subprocess
-from datetime import datetime
-import tiktoken
+
+import concurrent.futures
+import gitingest
 
 # Load environment variables from .env
 load_dotenv()
@@ -58,50 +63,114 @@ def call_openai_with_retry(prompt):
     return response
 
 
+def separate_chunk(repo_file="../repo.txt"):
+    with open(repo_file, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    chunks = []
+
+    sections = content.split("================================================\n")
+    sections = [section.strip() for section in sections if section.strip()]
+
+    # First section is the directory structure
+    directory_structure = sections[0] if sections else ""
+
+    chunks.append(directory_structure)
+    for i in range(1, len(sections), 2):
+        if i + 1 < len(sections):
+            chunk = "================================================\n" + sections[i] + "\n================================================\n" + sections[i + 1]
+        else:
+            chunk = "================================================\n" + sections[i]
+        chunks.append(chunk)
+
+    return chunks
+
+
+def validate_repo_url(repo_url):
+    try:
+        # Validate accessible
+        process = subprocess.Popen(['curl', '-I', repo_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        
+        status_line = stdout.decode().splitlines()[0]
+        status_code = int(status_line.split()[1])
+
+        if status_code not in (200, 301):
+            if status_code in (404, 302):
+                return False
+            else:
+                raise RuntimeError(f"Unexpected status code: {status_code}")
+
+        # Validate format
+        git_url_regex = re.compile(
+            r'^(https?|git|ssh|ftp|ftps)://' # Protocol
+            r'(([\w.-]+)@)?'                 # Optional user
+            r'([\w.-]+)'                     # Domain
+            r'(:\d+)?'                       # Optional port
+            r'(/[\w./-]+/[\w-]+)$'           # Exclude special characters
+        )
+
+        match = bool(git_url_regex.match(repo_url))
+        return match
+
+    except Exception as e:
+        print(f"Error validating URL {repo_url}: {e}")
+        return False
+
+def generate_rst(source_code_chunks):    
+    rst_parts = []
+    total_chunks = len(source_code_chunks)
+
+    def process_chunk(i, chunk, total_chunks):
+        print(f"Processing chunk {i + 1}/{total_chunks}, tokens: {count_tokens(chunk)}")
+        prompt = f"Generate Sphinx-compatible RST for this source code chunk (part {i + 1}/{total_chunks}):\n\n{chunk}"
+        gpt_response = call_openai_with_retry(prompt)
+
+        return gpt_response.choices[0].message.content
+    
+    max_workers = 4
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(process_chunk, i, chunk, total_chunks): i for i, chunk in enumerate(source_code_chunks)}
+        for future in concurrent.futures.as_completed(futures):
+            rst_parts.append(future.result())
+
+    return rst_parts
+
+
+def remove_files_by_pattern(directory, pattern):
+    full_pattern = os.path.join(directory, pattern)
+    
+    files_to_remove = glob.glob(full_pattern)
+    
+    for file_path in files_to_remove:
+        try:
+            os.remove(file_path)
+            print(f"Removed: {file_path}")
+        except Exception as e:
+            print(f"Error removing {file_path}: {e}")
+    
+
 @app.route('/generate-docs', methods=['POST'])
 def generate_docs():
-    # Assuming gitingest.ingest is the correct function to call
     data = request.get_json()
     repo_url = data.get('repoUrl')
-    subprocess.Popen(["gitingest", repo_url, "-o", "../repo.txt"]).wait()
-
-    # if not repo_url:
-    #     return jsonify({'error': 'Repository URL is required'}), 400
-
-    # match = re.match(r'github\.com\/([^\/]+)\/([^\/]+)', repo_url)
-    # if not match:
-    #     return jsonify({'error': 'Invalid GitHub URL'}), 400
     
-    try:
-        with open("../repo.txt", "r", encoding="utf8") as f:
-            content = f.read()
-        sections = content.split("================================================\n")
+    
+    # Clean up source and build by removing completely /build and all docs_*.rst from /source
+    remove_files_by_pattern("../backend/sphinx_docs/source", "docs_*.rst")
+    remove_files_by_pattern("../backend/sphinx_docs/build", "*.*")
 
-        # Remove any leading/trailing whitespace and empty sections
-        sections = [section.strip() for section in sections if section.strip()]
-
-        # The first section is the directory structure
-        directory_structure = sections[0] if sections else ""
-
-        # Combine every two sections starting from section 1
-        combined_sections = []
-        for i in range(1, len(sections), 2):
-            if i + 1 < len(sections):
-                combined_section = "================================================\n" + sections[i] + "\n================================================\n" + sections[i + 1]
-            else:
-                combined_section = "================================================\n" + sections[i]
-            combined_sections.append(combined_section)
-
-        source_code_chunks = combined_sections
-
+    if not validate_repo_url:
+        return jsonify({'error': 'Invalid GitHub URL'}), 400
+    
+    subprocess.Popen(["gitingest", f"{repo_url}", "-o", "../repo.txt"]).wait()
+    
+    try:    
+        source_code_chunks = separate_chunk("../repo.txt")
 
         # Step 2: Generate Sphinx RST for each chunk with retry logic
-        rst_parts = []
-        for i, chunk in enumerate(source_code_chunks):
-            print(f"Processing chunk {i + 1}/{len(source_code_chunks)}, tokens: {count_tokens(chunk)}")
-            prompt = f"Generate Sphinx-compatible RST for this source code chunk (part {i + 1}/{len(source_code_chunks)}):\n\n{chunk}"
-            gpt_response = call_openai_with_retry(prompt)
-            rst_parts.append(gpt_response.choices[0].message.content)
+        rst_parts = generate_rst(source_code_chunks=source_code_chunks)
         
         
         sphinx_docs = '\n\n.. raw:: html\n\n   <hr>\n\n'.join(rst_parts)
@@ -114,7 +183,7 @@ def generate_docs():
         # Write RST file
         rst_file_name = f"docs_{int(datetime.now().timestamp())}.rst"
         rst_file_path = os.path.join(source_dir, rst_file_name)
-        with open(rst_file_path, 'w') as f:
+        with open(rst_file_path, 'w', encoding="utf-8") as f:
             f.write(sphinx_docs)
 
         # Write minimal conf.py if not exists
@@ -148,17 +217,9 @@ Welcome to DocGen's documentation!
 
    {rst_file_name.replace('.rst', '')}
 """
-        with open(index_path, 'w') as f:
+        with open(index_path, 'w', encoding="utf-8") as f:
             f.write(index_content)
 
-        # Step 4: Run sphinx-build
-        # sphinx_command = f"sphinx-build -b html {source_dir} {build_dir}"
-        # process = asyncio.create_subprocess_exec(
-        #     *sphinx_command.split(),
-        #     stdout=asyncio.subprocess.PIPE,
-        #     stderr=asyncio.subprocess.PIPE
-        # )
-        # stdout, stderr = process.communicate()
         process = subprocess.call(["uv", "run", "sphinx-build", "-b", "html", source_dir, build_dir])
 
         # Step 5: Provide HTML download link
