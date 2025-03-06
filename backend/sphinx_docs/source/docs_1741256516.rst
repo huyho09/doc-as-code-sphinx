@@ -1,18 +1,51 @@
-Directory structure:
-└── lcngoan0607-familymarket/
+```rst
+README.md
+=========
+
+FamilyMarket
+------------
+
+I use the Angular framework with Material. Angular 7+.
+```
+
+.. raw:: html
+
+   <hr>
+
+```rst
+Project Structure
+=================
+
+The directory `lcngoan0607-familymarket/` is organized as follows:
+
+.. code-block:: text
+
+    lcngoan0607-familymarket/
     ├── README.md
     └── LICENSE
 
-================================================
-File: README.md
-================================================
-# FamilyMarket
-I use to angular framework with material . Angular 7+ .
+File Descriptions
+-----------------
 
+README.md
+~~~~~~~~~
 
-================================================
-File: LICENSE
-================================================
+The `README.md` file contains a detailed description of the project, including its purpose, setup instructions, usage, and any other pertinent information for developers or users.
+
+LICENSE
+~~~~~~~
+
+The `LICENSE` file outlines the licensing terms and conditions for using, distributing, and modifying the project. Please review this file to understand your rights and obligations when working with this codebase.
+```
+
+.. raw:: html
+
+   <hr>
+
+```rst
+License
+=======
+
 MIT License
 
 Copyright (c) 2021 lcngoan0607
@@ -34,5 +67,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-
+```

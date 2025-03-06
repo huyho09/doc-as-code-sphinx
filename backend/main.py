@@ -123,10 +123,13 @@ def generate_rst(source_code_chunks):
 
     def process_chunk(i, chunk, total_chunks):
         print(f"Processing chunk {i + 1}/{total_chunks}, tokens: {count_tokens(chunk)}")
-        prompt = f"Generate Sphinx-compatible RST for this source code chunk (part {i + 1}/{total_chunks}):\n\n{chunk}"
-        gpt_response = call_openai_with_retry(prompt)
+        if count_tokens(chunk) > 15000:
+            return "file too large"
+        else:
+            prompt = f"Generate Sphinx-compatible RST without any GPT comment for this source code chunk (part {i + 1}/{total_chunks}):\n\n{chunk}"
+            gpt_response = call_openai_with_retry(prompt)
 
-        return gpt_response.choices[0].message.content
+            return gpt_response.choices[0].message.content
     
     max_workers = 4
 
@@ -165,6 +168,9 @@ def generate_docs():
         return jsonify({'error': 'Invalid GitHub URL'}), 400
     
     subprocess.Popen(["gitingest", f"{repo_url}", "-o", "../repo.txt"]).wait()
+
+    if not os.path.exists("../repo.txt"):
+        return jsonify({'error': 'gitingest malfunction'}), 400
     
     try:    
         source_code_chunks = separate_chunk("../repo.txt")
@@ -199,7 +205,7 @@ release = '1.0'
 extensions = []
 templates_path = ['_templates']
 exclude_patterns = []
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 """
             with open(conf_path, 'w') as f:
@@ -209,7 +215,7 @@ html_static_path = ['_static']
         index_path = os.path.join(source_dir, 'index.rst')
         index_content = f"""
 Welcome to DocGen's documentation!
-=================================
+==================================
 
 .. toctree::
    :maxdepth: 2
